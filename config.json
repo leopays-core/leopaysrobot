@@ -1,13 +1,11 @@
 {
   "env": "production",
   "bot": {
-    "token": "0000000000:AAE4WmgliNFBh3R-Xbe2UJBTeUEH45nsWEc"
+    "token": ""
   },
   "leopays": {
-    "chain_id": "e95f03fb8e26b8268b9727da49f1c36ff2bc18bfc1d81899e6a15f21359cd4f7",
-    "keys": [
-      "5KhhjwU7riGyoeRa23v8VLqDhzwTRD5BLYtkVBcWjjnM2ZwhCoG"
-    ],
+    "chain_id": "",
+    "keys": [],
     "node": {
       "protocol": "https",
       "host": "node.leopays.dev",
