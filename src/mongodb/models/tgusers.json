@@ -1,0 +1,13 @@
+[
+  {
+    "id": 379937819,
+    "accounts": [
+      "lpc",
+      "leopays"
+    ],
+    "permissions": {
+      "root": true,
+      "admin": true
+    }
+  }
+]

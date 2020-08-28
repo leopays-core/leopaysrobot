@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  srv:
+    build: 
+      context: ../../
+      dockerfile: ./docker/build/Dockerfile
+    environment:
+      NODE_ENV: production
+      DATA_DIR: /data
+    volumes:
+      - "../../data/leopaysrobot/data:/data"
+    ports:
+      - "80:80"
+      - "443:443"

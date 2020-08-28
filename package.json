@@ -1,0 +1,54 @@
+{
+  "name": "leopaysrobot",
+  "version": "0.1.0",
+  "description": "LeoPaysRoBot",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "author": {
+    "name": "LeoPays",
+    "email": "developers@leopays.dev",
+    "url": "https://leopays.dev/"
+  },
+  "homepage": "https://github.com/leopays-core/leopaysrobot#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leopays-core/leopaysrobot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/leopays-core/leopaysrobot/issues",
+    "email": "developers@leopays.dev"
+  },
+  "bin": {
+    "leopaysrobot": "./bin/leopaysrobot"
+  },
+  "scripts": {
+    "start": "yarn run start:dev",
+    "start:dev": "NODE_ENV=development nodemon ./bin/leopaysrobot",
+    "start:prod": "NODE_ENV=production node ./bin/leopaysrobot"
+  },
+  "dependencies": {
+    "@log4js-node/gelf": "^1.0.2",
+    "base58": "^2.0.1",
+    "bignumber.js": "^9.0.0",
+    "body-parser": "^1.19.0",
+    "convict": "^6.0.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "handlebars": "^4.7.6",
+    "helmet": "^4.1.0",
+    "http-errors": "^1.8.0",
+    "leopaysjs": "https://github.com/leopays-core/leopaysjs",
+    "leopaysjs-ecc": "https://github.com/leopays-core/leopaysjs-ecc",
+    "log4js": "^6.3.0",
+    "random-name": "^0.1.2",
+    "telegraf": "^3.38.0",
+    "telegraf-i18n": "^6.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "keywords": [],
+  "contributors": []
+}

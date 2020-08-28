@@ -1,0 +1,44 @@
+CVS
+.svn
+.hg
+.lock-wscript
+.wafpickle-N
+.*.swp
+.DS_Store
+._*
+.npmrc
+node_modules
+config.gypi
+*.orig
+package-lock.json
+yarn.lock
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+node_modules
+
+# Build directories
+build
+
+# Data directories
+data
+
+# GitHub directories
+.git
+.github
+
+# Docker directories
+docker

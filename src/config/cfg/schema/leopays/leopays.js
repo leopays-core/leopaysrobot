@@ -1,0 +1,69 @@
+const isProd = process.env.NODE_ENV === 'production';
+
+
+
+// Define a schema
+const schema = {
+  leopays: {
+    chain_id: {
+      doc: "LeoPays chain_id",
+      format: String,
+      default: "e95f03fb8e26b8268b9727da49f1c36ff2bc18bfc1d81899e6a15f21359cd4f7",
+    },
+    keys: {
+      doc: "LeoPays private keys",
+      format: Array,
+      default: [],
+      env: "LPC_KEYS",
+      arg: "lpc-keys",
+    },
+    node: {
+      protocol: {
+        doc: "Connection protocol.",
+        format: ["https", "http"],
+        default: isProd ? "https" : "http",
+        env: "LPC_NODE_PROTOCOL",
+        arg: "lpc-node-protocol",
+      },
+      host: {
+        doc: "The IP address to bind.",
+        format: "*",
+        default: "127.0.0.1", // localhost:27017 // 127.0.0.1:27017
+        env: "LPC_NODE_HOST",
+        arg: "lpc-node-host",
+      },
+      port: {
+        doc: "The port to bind.",
+        format: "port",
+        default: 8888,
+        env: "LPC_NODE_PORT",
+        arg: "lpc-node-port",
+      },
+    },
+    api_node: {
+      protocol: {
+        doc: "Connection protocol.",
+        format: ["https", "http"],
+        default: isProd ? "https" : "http",
+        env: "LPC_API_NODE_PROTOCOL",
+        arg: "lpc-api-node-protocol",
+      },
+      host: {
+        doc: "The IP address to bind.",
+        format: "*",
+        default: "127.0.0.1", // localhost:27017 // 127.0.0.1:27017
+        env: "LPC_API_NODE_HOST",
+        arg: "lpc-api-node-host",
+      },
+      port: {
+        doc: "The port to bind.",
+        format: "port",
+        default: 8888,
+        env: "LPC_API-NODE_PORT",
+        arg: "lpc-api-node-port",
+      },
+    },
+  },
+};
+
+module.exports = schema;

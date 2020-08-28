@@ -1,0 +1,43 @@
+{
+  "env": "production",
+  "bot": {
+    "token": "0000000000:AAE4WmgliNFBh3R-Xbe2UJBTeUEH45nsWEc"
+  },
+  "leopays": {
+    "chain_id": "e95f03fb8e26b8268b9727da49f1c36ff2bc18bfc1d81899e6a15f21359cd4f7",
+    "keys": [
+      "5KhhjwU7riGyoeRa23v8VLqDhzwTRD5BLYtkVBcWjjnM2ZwhCoG"
+    ],
+    "node": {
+      "protocol": "https",
+      "host": "node.leopays.dev",
+      "port": 8888
+    },
+    "api_node": {
+      "protocol": "http",
+      "host": "127.0.0.1",
+      "port": 8888
+    }
+  },
+  "config": {
+    "file": "config.json"
+  },
+  "db": {
+    "host": "127.0.0.1",
+    "port": 27017,
+    "name": "LEOPAYS",
+    "options": {
+      "bufferCommands": true,
+      "useNewUrlParser": true,
+      "autoIndex": true,
+      "autoReconnect": true
+    }
+  },
+  "logger": {
+    "level": "info",
+    "appenders": {
+      "stdout": true,
+      "file": true
+    }
+  }
+}

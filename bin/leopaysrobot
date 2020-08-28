@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+
+global.db = {};
+global.server = {};
+global.bot = {};
+
+const cfg = require('../src/config');
+const log = require('../src/logger').getLogger('LeoPaysRoBot');
+const { connectDb } = require('../src/mongodb');
+const Server = require('../src/server');
+const getBot = require('../src/bot');
+
+
+
+const env = cfg.get('env');
+log.info('env:', env);
+
+const eraseDatabaseOnSync = false;
+
+connectDb('LeoPaysRoBot')
+  .then(async (db) => {
+    log.info('connected to db');
+    global.db = db;
+
+    if (eraseDatabaseOnSync) {
+      await Promise.all([
+        //mongoose.model('User').deleteMany(),
+      ]);
+    }
+
+    setTimeout(async function () {
+      global.server = new Server();
+      global.server.start();
+      global.bot = getBot();
+
+      global.bot.launch();
+    }, 1000);
+
+  })
+  .catch((error) => {
+    log.error(error);
+    throw new Error(error);
+  });

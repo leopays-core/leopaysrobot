@@ -1,0 +1,10 @@
+{
+  "verbose": false,
+  "ignore": [
+    ".git/*",
+    ".vscode/*",
+    "./data/*",
+    "./docker/*",
+    "./docs/*"
+  ]
+}

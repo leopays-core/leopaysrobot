@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  srv:
+    image: leopays/leopaysrobot:latest
+    environment:
+      NODE_ENV: production
+      PORT: 80
+      DATA_DIR: /data
+    env_file: .env
+    volumes:
+      - "../data/leopaysrobot/data:/data"
+    ports:
+      - 80:80
+      - 443:443
