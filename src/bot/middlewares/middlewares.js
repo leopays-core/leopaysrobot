@@ -7,7 +7,7 @@ const stage = require('../stage');
 const getExtra = require('../extra');
 const { kbStart } = require('../keyboards');
 const { sendAgreeIsExpectedHandler, addRef } = require('../handlers/lib');
-const getRendomPublicName = require('../../get-rendom-public-name');
+const getRendomPublicName = require('../../lib/get-rendom-public-name');
 
 
 

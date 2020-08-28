@@ -2,7 +2,6 @@ const Handlebars = require('handlebars');
 const aboutMessages = require('./about');
 const accountMessages = require('./account');
 const affiliateMessages = require('./affiliate');
-const settingsMessages = require('./settings');
 const walletMessages = require('./wallet');
 const settings = require('../../../settings');
 
@@ -193,6 +192,5 @@ module.exports = {
   ...aboutMessages,
   ...accountMessages,
   ...affiliateMessages,
-  ...settingsMessages,
   ...walletMessages,
 };

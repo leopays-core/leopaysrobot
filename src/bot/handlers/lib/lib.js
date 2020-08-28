@@ -3,7 +3,6 @@ const TGUser = mongoose.model('TGUser');
 const about = require('./about');
 const account = require('./account');
 const affiliate = require('./affiliate');
-const settings = require('./settings');
 const wallet = require('./wallet');
 const getExtra = require('../../extra');
 const {
@@ -163,6 +162,5 @@ module.exports = {
   ...about,
   ...account,
   ...affiliate,
-  ...settings,
   ...wallet,
 };

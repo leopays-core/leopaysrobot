@@ -6,7 +6,6 @@ const { int_to_base58 } = require('base58');
 const urlapi = require('url');
 const aboutKeyboards = require('./about');
 const accountKeyboards = require('./account');
-const settingsKeyboards = require('./settings');
 const walletKeyboards = require('./wallet');
 const settings = require('../../../settings');
 
@@ -155,6 +154,5 @@ module.exports = {
   ikbMenuSelecAccount,
   ...aboutKeyboards,
   ...accountKeyboards,
-  ...settingsKeyboards,
   ...walletKeyboards,
 };

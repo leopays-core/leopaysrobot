@@ -42,6 +42,7 @@
     "leopaysjs": "https://github.com/leopays-core/leopaysjs",
     "leopaysjs-ecc": "https://github.com/leopays-core/leopaysjs-ecc",
     "log4js": "^6.3.0",
+    "mongoose": "^5.10.1",
     "random-name": "^0.1.2",
     "telegraf": "^3.38.0",
     "telegraf-i18n": "^6.6.0"
