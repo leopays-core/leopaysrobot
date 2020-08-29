@@ -1,0 +1,53 @@
+{
+  "env": "production",
+  "leopays": {
+    "keys": [],
+    "node": {
+      "protocol": "https",
+      "host": "node.testnet.leopays.dev",
+      "port": 443
+    },
+    "api_node": {
+      "protocol": "https",
+      "host": "node.testnet.leopays.dev",
+      "port": 443
+    }
+  },
+  "bot": {
+    "token": "!"
+  },
+  "config": {
+    "file": "config.json"
+  },
+  "db": {
+    "host": "mongodb",
+    "port": 27017,
+    "name": "LEOPAYS",
+    "options": {
+      "bufferCommands": true,
+      "useNewUrlParser": true,
+      "autoIndex": true,
+      "autoReconnect": true
+    }
+  },
+  "logger": {
+    "level": "info",
+    "appenders": {
+      "stdout": true,
+      "stderr": false,
+      "gelf": false,
+      "file": true
+    },
+    "file": {
+      "name": "debug.log",
+      "pattern": ".yyyy-MM-dd-hh",
+      "keep_file_ext": true,
+      "encoding": "utf-8",
+      "mode": 511,
+      "flags": "a",
+      "compress": false,
+      "always_include_pattern": false,
+      "days_to_keep": 1
+    }
+  }
+}

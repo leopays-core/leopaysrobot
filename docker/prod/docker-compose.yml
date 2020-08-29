@@ -5,11 +5,19 @@ services:
     image: leopays/leopaysrobot:latest
     environment:
       NODE_ENV: production
-      PORT: 80
       DATA_DIR: /data
     env_file: .env
     volumes:
       - "../data/leopaysrobot/data:/data"
+
+  mongodb:
+    image: mongo:latest
+    hostname: mongodb
     ports:
-      - 80:80
-      - 443:443
+      - 27017:27017
+    #environment:
+      #MONGO_INITDB_ROOT_USERNAME: "root"
+      #MONGO_INITDB_ROOT_PASSWORD: "rootpassword"
+    volumes:
+      #- "mongodb_volume:/data"
+      - "../data/mongodb:/data"
