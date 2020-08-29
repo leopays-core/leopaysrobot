@@ -147,7 +147,7 @@ const scene = new WizardScene('account-regproducer',
       const text = 'Отправка транзакции.';
       const keyboard = kbMain(ctx);
       const extra = getExtra({ html: true, keyboard });
-      ctx.reply(txt, extra);
+      ctx.reply(text, extra);
       return ctx.scene.leave();
     }
   },

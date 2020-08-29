@@ -10,21 +10,20 @@ const linkauthRequiredForRobot = require('./linkauth-required-for-robot');
 
 
 const init = () => {
-  const chain_id = cfg.get('leopays.chain_id');
+  //const chain_id = cfg.get('leopays.chain_id');
   const keys = cfg.get('leopays.keys') || [];
   const signatureProvider = new JsSignatureProvider(keys);
   const url = `${cfg.get('leopays.api_node.protocol')}://${cfg.get('leopays.api_node.host')}:${cfg.get('leopays.api_node.port')}`;
   const rpc = new JsonRpc(url, { fetch });
   const api = new Api({
-    rpc, signatureProvider, chainId: chain_id,
+    rpc, signatureProvider, //chainId: chain_id,
     textDecoder: new TextDecoder(), textEncoder: new TextEncoder()
   });
   const extendedApi = initExtendedApi({ rpc, api, signatureProvider, });
 
 
-  check('leopaysrobot', 'leopaysrobot')
-    .then(() => check('leopays', 'leopaysrobot'))
-  /*
+  /*check('leopaysrobot', 'leopaysrobot')
+  .then(() => check('leopays', 'leopaysrobot'))
   .then(() => check('defproducera', 'leopaysrobot'))
   .then(() => check('defproducerb', 'leopaysrobot'))
   .then(() => check('defproducerc', 'leopaysrobot'))
@@ -88,7 +87,7 @@ const init = () => {
         }
 
         if (account === 'leopaysrobot') {
-          params.auth.keys.push({ key: "LPC6gigAiA24gPDJTnD2uU8EQJg6xDrQicHdQw3uPHBmzNgYdNHm6", weight: 1 });
+          params.auth.keys.push({ key: "LPC7WU6vPmDbKmSw5wkWpJBjdwTV2gaf951ATTtWqsB1b8A18sLb7", weight: 1 });
           delete params.auth.accounts;
         } else {
           delete params.auth.keys;

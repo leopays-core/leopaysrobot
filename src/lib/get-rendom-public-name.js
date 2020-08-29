@@ -1,4 +1,6 @@
 const randomName = require('random-name');
+const mongoose = require('mongoose');
+const TGUser = mongoose.model('TGUser');
 
 
 

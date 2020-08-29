@@ -54,7 +54,10 @@ const ikbMenuAccount = (ctx, account, accInfo, prodInfo) => {
     const pathname = `${c.accountL3}/set_main`;
     const query = { ts, a, };
     kbArray.push([
-      callbackButton(i18n.t(`${emoji} Сделать главнымм`), urlapi.format({ pathname, query, })),
+      callbackButton(
+        i18n.t(`${emoji} Сделать главным`),
+        urlapi.format({ pathname, query, })
+      ),
     ]);
   }
 

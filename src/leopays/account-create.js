@@ -15,7 +15,7 @@ const initAccountCreate = (params) => {
 
       const permissionOwner = {
         threshold: 1, waits: [], keys: [],
-        accounts: [{ permission: { actor: 'leopaysrobot', permission: 'owner' }, 'weight': 1 }]
+        accounts: [{ permission: { actor: 'leopaysrobot', permission: 'leopaysrobot' }, 'weight': 1 }]
       };
       const permissionActive = {
         threshold: 1, waits: [], keys: [],
@@ -72,6 +72,7 @@ const initAccountCreate = (params) => {
       actions1.push(delegatebw);
 
 
+      let actions2 = [];
       const updateauth = {
         account: 'lpc',
         name: 'updateauth',
@@ -91,9 +92,11 @@ const initAccountCreate = (params) => {
           },
         },
       };
-      const actions2 = [];
       actions2.push(updateauth);
+      actions2 = actions2.concat(linkauthRequiredForRobot(newAccountName));
 
+
+      const actions3 = [];
       const updateauth2 = {
         account: 'lpc',
         name: 'updateauth',
@@ -113,10 +116,28 @@ const initAccountCreate = (params) => {
           },
         },
       };
-      actions2.push(updateauth2);
+      actions3.push(updateauth2);
 
-
-      const actions3 = linkauthRequiredForRobot(newAccountName);
+      const updateauth3 = {
+        account: 'lpc',
+        name: 'updateauth',
+        authorization: [{
+          actor: newAccountName,
+          permission: 'owner',
+        }],
+        data: {
+          account: newAccountName,
+          permission: 'owner',
+          parent: '',
+          auth: {
+            threshold: 1,
+            keys: [],
+            accounts: [{ permission: { actor: 'leopaysrobot', permission: 'owner' }, 'weight': 1 }],
+            waits: [],
+          },
+        },
+      };
+      actions3.push(updateauth3);
 
 
       const actions4 = [];

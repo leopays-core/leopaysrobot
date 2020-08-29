@@ -59,7 +59,7 @@ const public_name = {
 };
 
 
-const newAccountDefaultCreator = 'leopays';
+const newAccountDefaultCreator = 'leopaysrobot';
 const newAccount = {
   bytes: 25000,
   net: '0.2000 LPC',

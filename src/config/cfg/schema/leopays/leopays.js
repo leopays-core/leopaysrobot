@@ -5,11 +5,6 @@ const isProd = process.env.NODE_ENV === 'production';
 // Define a schema
 const schema = {
   leopays: {
-    chain_id: {
-      doc: "LeoPays chain_id",
-      format: String,
-      default: "e95f03fb8e26b8268b9727da49f1c36ff2bc18bfc1d81899e6a15f21359cd4f7",
-    },
     keys: {
       doc: "LeoPays private keys",
       format: Array,
