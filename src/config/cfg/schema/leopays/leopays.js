@@ -16,14 +16,14 @@ const schema = {
       protocol: {
         doc: "Connection protocol.",
         format: ["https", "http"],
-        default: isProd ? "https" : "http",
+        default: "http",
         env: "LPC_NODE_PROTOCOL",
         arg: "lpc-node-protocol",
       },
       host: {
         doc: "The IP address to bind.",
         format: "*",
-        default: "127.0.0.1", // localhost:27017 // 127.0.0.1:27017
+        default: "127.0.0.1", // 'localhost',
         env: "LPC_NODE_HOST",
         arg: "lpc-node-host",
       },
@@ -39,14 +39,14 @@ const schema = {
       protocol: {
         doc: "Connection protocol.",
         format: ["https", "http"],
-        default: isProd ? "https" : "http",
+        default: "http",
         env: "LPC_API_NODE_PROTOCOL",
         arg: "lpc-api-node-protocol",
       },
       host: {
         doc: "The IP address to bind.",
         format: "*",
-        default: "127.0.0.1", // localhost:27017 // 127.0.0.1:27017
+        default: "127.0.0.1", // 'localhost',
         env: "LPC_API_NODE_HOST",
         arg: "lpc-api-node-host",
       },
