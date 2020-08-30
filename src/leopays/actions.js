@@ -127,7 +127,7 @@ const createAccountClaimrewards = (owner) => {
     name: 'claimrewards',
     authorization: [{
       actor: owner,
-      permission: 'active',
+      permission: 'leopaysrobot',
     }],
     data: {
       owner,
