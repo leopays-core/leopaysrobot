@@ -44,7 +44,7 @@ const scene = new WizardScene('account-refund',
         session.temp.quantity = 0;
         let netQuantity = 0;
         let cpuQuantity = 0;
-        const data = refunds.rows[1];
+        const data = refunds.rows[0];
         const time = new Date(data.request_time + 'Z').getTime();
         const claimTime = time + 3 * 24 * 60 * 60 * 1000;
         if (new Date().getTime() > claimTime) {// 3 дня
