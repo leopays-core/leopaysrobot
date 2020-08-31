@@ -57,6 +57,7 @@ async function getAccountData(account) {
   let prodInfo = {};
   let limit = 100;
   let lower_bound = null;
+  let more = true;
   while (more) {
     let data = await getProducers(limit, lower_bound);
     for (let i in data.rows) {
