@@ -26,7 +26,7 @@ const hbsMsgMenuWalletRU = `
 
 👤 /a_{{this.account}}
 <b>Баланс:</b> {{this.balance}}
-<b>Refunds:</b> {{this.refundsLPC}}
+<b>Refunds:</b> {{this.refundsLPC}}{{#if this.refundsLPC}} до {{refundsRequestTime}}{{/if}}
 <b>Застейкано:</b> {{this.staked}}
 {{/each}}
 {{else}}
@@ -59,12 +59,21 @@ const msgMenuWallet = async (ctx) => {
     const refunds = await leopays.rpc.get_table_rows({
       json: true, code: 'lpc', table: 'refunds', scope: accounts[i],
     });
-    for (let i in refunds.rows) {
+
+    const data = refunds.rows[0];
+    const time = new Date(data.request_time + 'Z').getTime();
+    const claimTime = time + 3 * 24 * 60 * 60 * 1000;
+    new Date(claimTime).toUTCString()
+
+    if (refunds.rows.length > 0) {
       refundsLPC += parseInt(
-        parseFloat(refunds.rows[i].net_amount.split(' ')[0]) * 10000
-        + parseFloat(refunds.rows[i].cpu_amount.split(' ')[0]) * 10000
+        parseFloat(refunds.rows[0].net_amount.split(' ')[0]) * 10000
+        + parseFloat(refunds.rows[0].cpu_amount.split(' ')[0]) * 10000
       );
-      refundsRequestTime = refunds.rows[i].request_time;
+      refundsRequestTime = new Date(
+        new Date(refunds.rows[0].request_time + 'Z').getTime()
+        + 3 * 24 * 60 * 60 * 1000
+      ).toUTCString();
     }
     const data = await leopays.rpc.get_currency_balance('lpc.token', accounts[i], 'LPC');
     const acc = await leopays.rpc.get_account(accounts[i]);
