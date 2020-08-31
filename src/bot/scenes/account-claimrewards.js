@@ -50,7 +50,7 @@ const scene = new WizardScene('account-claimrewards',
         log.error(error);
       });
 
-      text = 'Отправка трназакции.'
+      text = 'Отправка транзакции.'
       const keyboard = kbMain(ctx);
       const extra = getExtra({ html: true, keyboard });
       ctx.reply(text, extra);

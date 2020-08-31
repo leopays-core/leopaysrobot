@@ -8,6 +8,7 @@ const aboutKeyboards = require('./about');
 const accountKeyboards = require('./account');
 const walletKeyboards = require('./wallet');
 const settings = require('../../../settings');
+const cfg = require('../../config');
 
 
 
@@ -80,9 +81,11 @@ const ikbMenuShortInfo = (ctx) => {
   kbArray.push([
     urlButton(i18n.t('Explorer (Bloks.io)'), explorer_url),
   ]);
-  kbArray.push([
-    urlButton(i18n.t('Explorer (Bloks.io) local node'), explorer_local_url),
-  ]);
+  if (cfg.get('env') !== 'production') {
+    kbArray.push([
+      urlButton(i18n.t('Explorer (Bloks.io) local node'), explorer_local_url),
+    ]);
+  }
 
   return inlineKeyboard(kbArray);
 }
@@ -118,9 +121,11 @@ const ikbMenuTransaction = (ctx, transaction) => {
   kbArray.push([
     urlButton(i18n.t('See TX in Explorer (Bloks.io)'), explorer_url),
   ]);
-  kbArray.push([
-    urlButton(i18n.t('See TX in Explorer (Bloks.io) local node'), explorer_local_url),
-  ]);
+  if (cfg.get('env') !== 'production') {
+    kbArray.push([
+      urlButton(i18n.t('See TX in Explorer (Bloks.io) local node'), explorer_local_url),
+    ]);
+  }
   return inlineKeyboard(kbArray);
 }
 

@@ -76,7 +76,8 @@ const scene = new WizardScene('token-transfer',
       if (!incorrect) {
         let text = `Укажите числом количество LPC которое вы хотите отправить.`
         session.temp.accInfo = await leopays.rpc.get_account(session.temp.from);
-        text += `\nВам доступно: ` + session.temp.accInfo.core_liquid_balance ? session.temp.accInfo.core_liquid_balance : '0 LPC';
+
+        text += `\nВам доступно: ${session.temp.accInfo.core_liquid_balance ? session.temp.accInfo.core_liquid_balance : '0 LPC'}`;
         const keyboard = kbCancel(ctx);
         const extra = getExtra({ html: true, keyboard });
         ctx.reply(text, extra);
@@ -101,19 +102,14 @@ const scene = new WizardScene('token-transfer',
         return ctx.scene.leave();
       }
 
-      session.temp.quantity = ctx.message.text.toLowerCase().trim();
+      session.temp.quantity = ctx.message.text.toLowerCase().trim().replace(',', '.');
       if (/[A-Za-z]/i.test(session.temp.quantity)) {
         session.temp.quantity = parseInt(parseFloat(/[0-9.,]+/.exec(session.temp.quantity)[0]) * 10000) / 10000;
       }
       else
         session.temp.quantity = parseInt(parseFloat(session.temp.quantity) * 10000) / 10000;
-
-      if (session.temp.quantity % 1 === 0)
-        session.temp.quantity = `${session.temp.quantity}.0000 LPC`;
-      else
-        session.temp.quantity = `${session.temp.quantity} LPC`;
-
-      const text = `Укажите комментарий в поле 'memo' или нажмите пропустить.`
+      session.temp.quantity = `${session.temp.quantity.toFixed(4)} LPC`;
+      const text = `Укажите данные в поле 'memo' (Только английские буквы и цифры) или нажмите "Пропустить".`
       const keyboard = kbCancelSkip(ctx);
       const extra = getExtra({ html: true, keyboard });
       ctx.reply(text, extra);

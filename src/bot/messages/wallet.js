@@ -26,6 +26,7 @@ const hbsMsgMenuWalletRU = `
 
 👤 /a_{{this.account}}
 <b>Баланс:</b> {{this.balance}}
+<b>Refunds:</b> {{this.refundsLPC}}
 <b>Застейкано:</b> {{this.staked}}
 {{/each}}
 {{else}}
@@ -53,13 +54,27 @@ const msgMenuWallet = async (ctx) => {
   //const balance = available + staked;
   const balances = [];
   for (let i in accounts) {
+    let refundsLPC = 0;
+    let refundsRequestTime = '';
+    const refunds = await leopays.rpc.get_table_rows({
+      json: true, code: 'lpc', table: 'refunds', scope: accounts[i],
+    });
+    for (let i in refunds.rows) {
+      refundsLPC += parseInt(
+        parseFloat(refunds.rows[i].net_amount.split(' ')[0]) * 10000
+        + parseFloat(refunds.rows[i].cpu_amount.split(' ')[0]) * 10000
+      );
+      refundsRequestTime = refunds.rows[i].request_time;
+    }
     const data = await leopays.rpc.get_currency_balance('lpc.token', accounts[i], 'LPC');
     const acc = await leopays.rpc.get_account(accounts[i]);
 
     balances.push({
       account: accounts[i],
-      balance: acc.core_liquid_balance ? acc.core_liquid_balance : '0 LPC',
+      balance: acc.core_liquid_balance ? acc.core_liquid_balance : '0.0000 LPC',
       //equivalent: 0, available: 0,
+      refundsLPC: `${refundsLPC / 10000} LPC`,
+      refundsRequestTime,
       staked: `${(acc.voter_info ? acc.voter_info.staked : 0) / 10000} LPC`,
       //currency_symbol: 'USDT', cryptocurrency_symbol: 'LPC',
     });

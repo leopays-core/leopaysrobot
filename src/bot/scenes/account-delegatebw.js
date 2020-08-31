@@ -39,7 +39,21 @@ const scene = new WizardScene('account-delegatebw',
       if (!incorrect) {
         let text = `Укажите числом количество LPC которое вы хотите застейковать.`;
         const acc = await leopays.rpc.get_account(session.temp.from);
-        text += `\nВам доступно: ` + acc.core_liquid_balance ? acc.core_liquid_balance : '0 LPC';
+        let avaible = 0;
+        let refundsLPC = 0;
+        let refundsRequestTime = '';
+        const refunds = await leopays.rpc.get_table_rows({
+          json: true, code: 'lpc', table: 'refunds', scope: session.temp.from,
+        });
+        for (let i in refunds.rows) {
+          refundsLPC += parseInt(
+            parseFloat(refunds.rows[i].net_amount.split(' ')[0]) * 10000
+            + parseFloat(refunds.rows[i].cpu_amount.split(' ')[0]) * 10000
+          );
+        }
+        avaible += refundsLPC;
+        avaible += parseInt(parseFloat(acc.core_liquid_balance.split(' ')[0]) * 10000);
+        text += `\nВам доступно: ${(avaible / 10000).toFixed(4)} LPC`;
         const keyboard = kbListAndCancel(ctx, session.user.accounts);
         const extra = getExtra({ html: true, keyboard });
         ctx.reply(text, extra);
@@ -64,7 +78,7 @@ const scene = new WizardScene('account-delegatebw',
         return ctx.scene.leave();
       }
 
-      session.temp.quantity = ctx.message.text.toLowerCase().trim();
+      session.temp.quantity = ctx.message.text.toLowerCase().trim().replace(',', '.');
       if (/[A-Za-z]/i.test(session.temp.quantity)) {
         session.temp.quantity = parseInt(parseFloat(/[0-9.,]+/.exec(session.temp.quantity)[0]) * 10000) / 10000;
       }
