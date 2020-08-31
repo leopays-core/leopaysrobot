@@ -60,20 +60,14 @@ const msgMenuWallet = async (ctx) => {
       json: true, code: 'lpc', table: 'refunds', scope: accounts[i],
     });
 
-    const data = refunds.rows[0];
-    const time = new Date(data.request_time + 'Z').getTime();
-    const claimTime = time + 3 * 24 * 60 * 60 * 1000;
-    new Date(claimTime).toUTCString()
-
     if (refunds.rows.length > 0) {
       refundsLPC += parseInt(
         parseFloat(refunds.rows[0].net_amount.split(' ')[0]) * 10000
         + parseFloat(refunds.rows[0].cpu_amount.split(' ')[0]) * 10000
       );
-      refundsRequestTime = new Date(
-        new Date(refunds.rows[0].request_time + 'Z').getTime()
-        + 3 * 24 * 60 * 60 * 1000
-      ).toUTCString();
+      const time = new Date(refunds.rows[0].request_time + 'Z').getTime();
+      const claimTime = time + 3 * 24 * 60 * 60 * 1000;
+      refundsRequestTime = new Date(claimTime).toUTCString();
     }
     const data = await leopays.rpc.get_currency_balance('lpc.token', accounts[i], 'LPC');
     const acc = await leopays.rpc.get_account(accounts[i]);
