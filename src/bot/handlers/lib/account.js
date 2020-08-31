@@ -43,16 +43,35 @@ async function sendMenuAccountCreate(ctx) {
 }
 
 
+async function getProducers(limit = 100, lower_bound) {
+  return await leopays.rpc.get_table_rows({
+    json: true, code: 'lpc', scope: 'lpc', table: 'producers',
+    lower_bound, limit,
+  });
+
+}
+
 async function getAccountData(account) {
   const accInfo = await leopays.rpc.get_account(account);
-  const producersRows = await leopays.rpc.get_table_rows({
-    code: 'lpc', scope: 'lpc', table: 'producers',
-    lower_bound: account, limit: 1, show_payer: true,
-  });
+
   let prodInfo = {};
-  if (producersRows.rows.length > 0)
-    prodInfo = producersRows.rows[0].data;
-  //const is_active = prodInfo.is_active ? prodInfo.is_active : false;
+  let limit = 100;
+  let lower_bound = null;
+  while (more) {
+    let data = await getProducers(limit, lower_bound);
+    for (let i in data.rows) {
+      if (data.rows[i].owner === account) {
+        more = false;
+        prodInfo = data.rows[i];
+      } else
+        lower_bound = data.rows[i].owner;
+    }
+
+    limit = 101;
+    if (data.rows.length === 0)
+      more = false;
+  }
+
   return { accInfo, prodInfo };
 }
 async function editMenuToAccount(ctx, account) {
