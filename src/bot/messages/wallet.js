@@ -73,9 +73,9 @@ const msgMenuWallet = async (ctx) => {
       account: accounts[i],
       balance: acc.core_liquid_balance ? acc.core_liquid_balance : '0.0000 LPC',
       //equivalent: 0, available: 0,
-      refundsLPC: `${refundsLPC / 10000} LPC`,
+      refundsLPC: `${(refundsLPC / 10000).toFixed(4)} LPC`,
       refundsRequestTime,
-      staked: `${(acc.voter_info ? acc.voter_info.staked : 0) / 10000} LPC`,
+      staked: `${((acc.voter_info) / 10000).toFixed(4)} LPC`,
       //currency_symbol: 'USDT', cryptocurrency_symbol: 'LPC',
     });
   }
