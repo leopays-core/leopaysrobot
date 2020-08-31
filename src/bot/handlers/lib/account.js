@@ -69,8 +69,7 @@ async function getAccountData(account) {
     }
 
     limit = 101;
-    if (data.rows.length === 0)
-      more = false;
+    more = data.more;
   }
 
   return { accInfo, prodInfo };
