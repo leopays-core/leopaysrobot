@@ -17,19 +17,26 @@ const ikbMenuWallet = (ctx) => {
       urlapi.format({ pathname: `${c.walletL3}/stake`, query: { ts, }, }),
     ),
     callbackButton(
-      i18n.t('Unstake'),
-      urlapi.format({ pathname: `${c.walletL3}/unstake`, query: { ts, }, }),
+      i18n.t('Vote'),
+      urlapi.format({ pathname: `${c.walletL3}/vote`, query: { ts, }, }),
     )
   ]);
 
   kbArray.push([
     callbackButton(
-      i18n.t('Vote'),
-      urlapi.format({ pathname: `${c.walletL3}/vote`, query: { ts, }, }),
-    ),
-    callbackButton(
       i18n.t('Claim rewards'),
       urlapi.format({ pathname: `${c.walletL3}/claim`, query: { ts, }, }),
+    )
+  ]);
+
+  kbArray.push([
+    callbackButton(
+      i18n.t('Unstake'),
+      urlapi.format({ pathname: `${c.walletL3}/unstake`, query: { ts, }, }),
+    ),
+    callbackButton(
+      i18n.t('Refund'),
+      urlapi.format({ pathname: `${c.walletL3}/refund`, query: { ts, }, }),
     )
   ]);
 

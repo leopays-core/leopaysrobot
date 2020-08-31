@@ -93,8 +93,8 @@ const scene = new WizardScene('account-delegatebw',
       }).catch((error) => {
         log.error(error);
       });
-
     }
+
     const text = 'Отправка транзакции.';
     const keyboard = kbMain(ctx);
     const extra = getExtra({ html: true, keyboard });

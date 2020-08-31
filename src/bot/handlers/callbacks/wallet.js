@@ -22,10 +22,12 @@ const applyHandlersOfCallbacks = (bot) => {
         return ctx.scene.enter('account-delegatebw');
       case `${c.walletL3}/vote`:
         return ctx.scene.enter('account-voteproducer');
-      case `${c.walletL3}/unstake`:
-        return ctx.scene.enter('account-undelegatebw');
       case `${c.walletL3}/claim`:
         return ctx.scene.enter('account-claimrewards');
+      case `${c.walletL3}/unstake`:
+        return ctx.scene.enter('account-undelegatebw');
+      case `${c.walletL3}/refund`:
+        return ctx.scene.enter('account-refund');
       case `${c.walletL3}/receive`:
         return sendMenuWalletReceive(ctx);
       case `${c.walletL3}/send`:
