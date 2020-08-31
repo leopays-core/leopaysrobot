@@ -3,7 +3,8 @@
     "id": 379937819,
     "accounts": [
       "lpc",
-      "leopays"
+      "leopays",
+      "leopaysrobot"
     ],
     "permissions": {
       "root": true,
