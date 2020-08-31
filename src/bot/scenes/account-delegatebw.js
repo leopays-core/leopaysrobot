@@ -78,7 +78,7 @@ const scene = new WizardScene('account-delegatebw',
         return ctx.scene.leave();
       }
 
-      session.temp.quantity = ctx.message.text.toLowerCase().trim();
+      session.temp.quantity = ctx.message.text.toLowerCase().trim().replace(' ', '');
       if (/[A-Za-z]/i.test(session.temp.quantity)) {
         session.temp.quantity = parseInt(parseFloat(/[0-9.,]+/.exec(session.temp.quantity)[0]) * 10000) / 10000;
       }
