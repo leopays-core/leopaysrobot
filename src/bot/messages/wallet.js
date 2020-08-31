@@ -26,7 +26,7 @@ const hbsMsgMenuWalletRU = `
 
 👤 /a_{{this.account}}
 <b>Баланс:</b> {{this.balance}}
-<b>Refunds:</b> {{this.refundsLPC}}{{#if this.refundsLPC}} до {{refundsRequestTime}}{{/if}}
+<b>Refunds:</b> {{this.refundsLPC}}{{#if this.refundsRequestTime}} до {{refundsRequestTime}}{{/if}}
 <b>Застейкано:</b> {{this.staked}}
 {{/each}}
 {{else}}
