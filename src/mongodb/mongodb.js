@@ -19,7 +19,7 @@ const getDbUri = () => {
       : '';
   const srv = `${cfg.get('db.host')}:${cfg.get('db.port')}`;
   const name = `${cfg.get('db.name')}`;
-  const uri = `mongodb://${srv}/${name}`;
+  const uri = `mongodb://${usr}${srv}/${name}${usr !== '' ? '?authSource=admin' : ''}`;
   return uri;
 }
 
