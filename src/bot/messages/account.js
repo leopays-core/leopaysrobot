@@ -61,8 +61,8 @@ const hbsMsgMenuAccountRU = `
 <b>Creator</b>: /a_{{creator}}
 
 <b>Ресурсы</b>:
-<b>RAM</b>: usage: {{ram_usage}} / quota:{{ram_quota}} Bites
-<b>NET</b>: used: {{net_limit.used}} / available: {{cpu_limit.available}} / max: {{cpu_limit.max}} Bites
+<b>RAM</b>: usage: {{ram_usage}} / quota:{{ram_quota}} Bytes
+<b>NET</b>: used: {{net_limit.used}} / available: {{cpu_limit.available}} / max: {{cpu_limit.max}} Bytes
 <b>CPU</b>: used: {{cpu_limit.used}} / available: {{cpu_limit.available}} / max: {{cpu_limit.max}} µs
 
 {{#if voter_info}}
