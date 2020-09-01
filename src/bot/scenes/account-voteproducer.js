@@ -90,6 +90,8 @@ const scene = new WizardScene('account-voteproducer',
           sendMenuTransaction(ctx, transaction);
         }).catch((error) => {
           log.error(error);
+          const extra = getExtra({ html: true });
+          ctx.reply('<b>Нода вернула ошибку</b>', extra);
         });
 
         const text = 'Отправка транзакции.';
@@ -143,6 +145,8 @@ const scene = new WizardScene('account-voteproducer',
           sendMenuTransaction(ctx, transaction);
         }).catch((error) => {
           log.error(error);
+          const extra = getExtra({ html: true });
+          ctx.reply('<b>Нода вернула ошибку</b>', extra);
         });
 
         const text = 'Отправка транзакции.';

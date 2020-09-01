@@ -126,6 +126,8 @@ const scene = new WizardScene('account-regproducer',
           return ctx.wizard.next();
         }).catch((error) => {
           log.error(error);
+          const extra = getExtra({ html: true });
+          ctx.reply('<b>Нода вернула ошибку</b>', extra);
         });
       }
 
@@ -141,6 +143,8 @@ const scene = new WizardScene('account-regproducer',
           return ctx.scene.leave();
         }).catch((error) => {
           log.error((SS(error)));
+          const extra = getExtra({ html: true });
+          ctx.reply('<b>Нода вернула ошибку</b>', extra);
         });
       }
 

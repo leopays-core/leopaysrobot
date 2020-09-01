@@ -136,6 +136,8 @@ const scene = new WizardScene('token-transfer',
         sendMenuTransaction(ctx, transaction);
       }).catch((error) => {
         log.error((SS(error)));
+        const extra = getExtra({ html: true });
+        ctx.reply('<b>Нода вернула ошибку</b>', extra);
       });
 
       const text = 'Отправка транзакции.';

@@ -50,6 +50,8 @@ const applyHandlersOfCallbacks = (bot) => {
           return editMenuToAccount(ctx, account);
         }).catch((error) => {
           log.error((SS(error)));
+          const extra = getExtra({ html: true });
+          ctx.reply('<b>Нода вернула ошибку</b>', extra);
         });
       }
 
@@ -79,6 +81,8 @@ const applyHandlersOfCallbacks = (bot) => {
           return editMenuToAccount(ctx, account);
         }).catch((error) => {
           log.error((SS(error)));
+          const extra = getExtra({ html: true });
+          ctx.reply('<b>Нода вернула ошибку</b>', extra);
         });
       }
 

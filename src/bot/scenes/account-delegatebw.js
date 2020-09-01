@@ -92,6 +92,8 @@ const scene = new WizardScene('account-delegatebw',
         sendMenuTransaction(ctx, transaction);
       }).catch((error) => {
         log.error(error);
+        const extra = getExtra({ html: true });
+        ctx.reply('<b>Нода вернула ошибку</b>', extra);
       });
     }
 
