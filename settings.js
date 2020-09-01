@@ -70,7 +70,7 @@ const newAccount = {
   cpu: '0.8000 LPC',
   cpu_rate: 4 / 5,
 };
-const maxAccountsPerUser = 10;
+const maxAccountsPerUser = 30;
 
 
 module.exports = {
