@@ -13,7 +13,10 @@ const applyHandlersOfCallbacks = (bot) => {
 
     const url = urlapi.parse(callbackQuery.data);
     const query = url.query === null ? null : querystring.parse(url.query);
-    const ts = query !== null ? base58_to_int(query.ts) : null;
+    let ts = 0;
+    if (query !== null && query.ts !== undefined)
+      ts = base58_to_int(query.ts);
+
 
     switch (url.pathname) {
       case `${c.affiliateL3}`:

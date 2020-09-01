@@ -3,6 +3,7 @@ const TGUser = mongoose.model('TGUser');
 const {
   withWrongCommandHandler, sendGreetingHandler,
   sendMenuWallet, sendMenuAccounts,
+  sendMenuNetwork,
   sendMenuAbout, sendMenuSettings,
   sendMenuToAccount,
 } = require('./lib');
@@ -28,6 +29,8 @@ const applyHandlersOfMessages = (bot) => {
         return sendMenuWallet(ctx);
       case i18n.t('Account'):
         return sendMenuAccounts(ctx);
+      case i18n.t('Network'):
+        return sendMenuNetwork(ctx);
       case i18n.t('About'):
         return sendMenuAbout(ctx);
       case i18n.t('Settings'):
@@ -45,7 +48,7 @@ const applyHandlersOfMessages = (bot) => {
   });
 
   bot.hears(/^\/a_(\w+)/, (ctx) => {
-    return sendMenuToAccount(ctx, ctx.match[1].replace('_', '.'));
+    return sendMenuToAccount(ctx, ctx.match[1]);//ctx.match[1].replace('_', '.')
   });
 
   // неизвестная команда или текст которые не отработаны обработчиками.

@@ -3,7 +3,7 @@ const querystring = require('querystring');
 const urlapi = require('url');
 const mongoose = require('mongoose');
 const TGUser = mongoose.model('TGUser');
-const { sendMenuTransaction,
+const { sendMenuTransaction, sendMenuTransactionError,
   editMenuToAccounts, editMenuToAccount,
 } = require('../lib');
 const log = require('../../../logger').getLogger('callbacks:account');
@@ -21,7 +21,10 @@ const applyHandlersOfCallbacks = (bot) => {
 
     const url = urlapi.parse(callbackQuery.data);
     const query = url.query === null ? null : querystring.parse(url.query);
-    const ts = query !== null ? base58_to_int(query.ts) : null;
+    let ts = 0;
+    if (query !== null && query.ts !== undefined)
+      ts = base58_to_int(query.ts);
+
 
     switch (url.pathname) {
       case `${c.accountL3}`:
@@ -51,7 +54,7 @@ const applyHandlersOfCallbacks = (bot) => {
         }).catch((error) => {
           log.error((SS(error)));
           const extra = getExtra({ html: true });
-          ctx.reply('<b>Узел LeoPays вернул ошибку при обработке транзакции.</b>\n\n' + SS(error), extra);
+          ctx.reply(sendMenuTransactionError(ctx, error), extra);
         });
       }
 
@@ -82,7 +85,7 @@ const applyHandlersOfCallbacks = (bot) => {
         }).catch((error) => {
           log.error((SS(error)));
           const extra = getExtra({ html: true });
-          ctx.reply('<b>Узел LeoPays вернул ошибку при обработке транзакции.</b>\n\n' + SS(error), extra);
+          ctx.reply(sendMenuTransactionError(ctx, error), extra);
         });
       }
 

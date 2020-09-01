@@ -25,6 +25,10 @@ const explorer = {
 
 
 const constants = {
+  network: 'network',
+  networkL3: 'net',
+  networkL1: 'n',
+
   affiliate: 'affiliate',
   affiliateL3: 'aff',
 

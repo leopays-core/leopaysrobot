@@ -8,6 +8,7 @@ const aboutKeyboards = require('./about');
 const accountKeyboards = require('./account');
 const walletKeyboards = require('./wallet');
 const settings = require('../../../settings');
+const { c } = settings;
 const cfg = require('../../config');
 const stringToBoolean = require('../../lib/string-to-boolean');
 
@@ -61,6 +62,103 @@ const kbIAgree = (ctx) => {
 }
 
 
+const ikbMenuNetwork = (ctx) => {
+  const { i18n } = ctx;
+  const ts = int_to_base58(Math.round(new Date().getTime() / 1000));
+  const kbArray = [];
+
+  kbArray.push([
+    callbackButton(
+      i18n.t('Block Producers'),
+      urlapi.format({ pathname: `${c.networkL3}/prods`, query: { ts, }, }),
+    ),
+  ]);
+
+  return inlineKeyboard(kbArray);
+}
+
+const ikbMenuNetworkProds = (ctx, producersdata = { rows: [], more: false }, selected = []) => {
+  const { i18n } = ctx;
+  const ts = int_to_base58(Math.round(new Date().getTime() / 1000));
+  const kbArray = [];
+  const kbArrayRowSize = 2;
+  let kbArrayRow = [];
+
+  for (let i in producersdata.rows) {
+    const pathname = 'net/prods';
+    const query = {
+      p: producersdata.rows[i].owner,
+      m: producersdata.rows[i].more,
+      ts,
+    };
+    const isActive = stringToBoolean(producersdata.rows[i].is_active);
+    if (isActive) {
+      if (!(kbArrayRow.length < kbArrayRowSize)) {
+        kbArray.push(kbArrayRow);
+        kbArrayRow = [];
+      }
+
+      kbArrayRow.push(
+        callbackButton(
+          producersdata.rows[i].owner,
+          urlapi.format({ pathname, query, }),
+        ),
+      );
+    }
+  }
+  if (kbArrayRow.length > 0)
+    kbArray.push(kbArrayRow);
+
+  kbArray.push([
+    callbackButton(
+      i18n.t('Back'),
+      urlapi.format({ pathname: `${c.networkL3}`, query: { ts, }, }),
+    ),
+  ]);
+
+  return inlineKeyboard(kbArray);
+}
+
+
+
+const ikbMenuProducers = (producersdata = { rows: [], more: false }, selected = []) => {
+  const ts = int_to_base58(Math.round(new Date().getTime() / 1000));
+  const kbArray = [];
+  const kbArrayRowSize = 2;
+  let kbArrayRow = [];
+
+  for (let i in producersdata.rows) {
+    const pathname = '';
+    const query = {
+      p: producersdata.rows[i].owner,
+      m: producersdata.rows[i].more,
+      ts,
+    };
+    const isActive = stringToBoolean(producersdata.rows[i].is_active);
+    if (isActive) {
+      if (!(kbArrayRow.length < kbArrayRowSize)) {
+        kbArray.push(kbArrayRow);
+        kbArrayRow = [];
+      }
+
+      let sel = '';
+      if (selected.includes(producersdata.rows[i].owner))
+        sel = '✅ ';
+      kbArrayRow.push(
+        callbackButton(
+          `${sel}${producersdata.rows[i].owner}`,
+          urlapi.format({ pathname, query, }),
+        )
+      );
+    }
+  }
+  if (kbArrayRow.length > 0)
+    kbArray.push(kbArrayRow);
+
+  return inlineKeyboard(kbArray);
+}
+
+
 const kbMain = (ctx) => {
   const { i18n } = ctx;
   const kbArray = [];
@@ -68,6 +166,9 @@ const kbMain = (ctx) => {
   kbArray.push([
     button(i18n.t('Wallet')),
     button(i18n.t('Account')),
+  ]);
+  kbArray.push([
+    button(i18n.t('Network')),
   ]);
   kbArray.push([
     button(i18n.t('About')),
@@ -95,30 +196,6 @@ const ikbMenuShortInfo = (ctx) => {
     ]);
   }
 
-  return inlineKeyboard(kbArray);
-}
-
-
-const ikbMenuProducers = (producersdata = { rows: [], more: false }, selectes = []) => {
-  const kbArray = [];
-  console.log(producersdata)
-  for (let i in producersdata.rows) {
-    const pathname = '';
-    const query = {
-      p: producersdata.rows[i].owner,
-      m: producersdata.rows[i].more,
-    };
-    const isActive = stringToBoolean(producersdata.rows[i].is_active);
-    if (isActive)
-      kbArray.push([
-        callbackButton(
-          producersdata.rows[i].owner,
-          urlapi.format({ pathname, query, }),
-        ),
-      ]);
-  }
-  //'?a=leopaysnode2&m=&v=9153188755689658.00000000000000000'
-  console.log(kbArray)
   return inlineKeyboard(kbArray);
 }
 
@@ -180,6 +257,8 @@ const ikbMenuSelecAccount = (ctx, pathname, accounts) => {
 
 
 module.exports = {
+  ikbMenuNetwork,
+  ikbMenuNetworkProds,
   kbStart,
   kbCancel,
   kbCancelNext,

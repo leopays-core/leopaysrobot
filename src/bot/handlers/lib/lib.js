@@ -16,8 +16,30 @@ const {
   kbIAgree, kbMain,
   ikbMenuShortInfo,
   ikbMenuSelecAccount,
+  ikbMenuNetwork,
+  ikbMenuNetworkProds,
 } = require('../../keyboards');
 
+
+
+async function sendMenuNetwork(ctx) {
+  const text = '<b>Network</b>';
+  const keyboard = ikbMenuNetwork(ctx);
+  const extra = getExtra({ html: true, keyboard });
+  return ctx.reply(text, extra);
+}
+async function editToMenuNetwork(ctx) {
+  const text = '<b>Network</b>';
+  const keyboard = ikbMenuNetwork(ctx);
+  const extra = getExtra({ html: true, keyboard });
+  return ctx.editMessageText(text, extra);
+}
+async function editToMenuNetworkProds(ctx, producersdata = { rows: [], more: false }, selectes = []) {
+  const text = '<b>Network</b>';
+  const keyboard = ikbMenuNetworkProds(ctx, producersdata, selectes);
+  const extra = getExtra({ html: true, keyboard });
+  return ctx.editMessageText(text, extra);
+}
 
 
 async function sendAgreeIsExpectedHandler(ctx) {
@@ -150,6 +172,9 @@ async function editMenuToSelecAccount(ctx, pathname, accounts) {
 
 
 module.exports = {
+  sendMenuNetwork,
+  editToMenuNetwork,
+  editToMenuNetworkProds,
   sendMenuSelecAccount,
   editMenuToSelecAccount,
   sendAgreeIsExpectedHandler,

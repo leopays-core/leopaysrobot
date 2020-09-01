@@ -4,6 +4,7 @@ const urlapi = require('url');
 const applyHandlersOfCallbacksForAbout = require('./about');
 const applyHandlersOfCallbacksForAccount = require('./account');
 const applyHandlersOfCallbacksForAffiliate = require('./affiliate');
+const applyHandlersOfCallbacksForNetwork = require('./network');
 const applyHandlersOfCallbacksForWallet = require('./wallet');
 const { msgOhSorry, } = require('../../messages');
 const { } = require('../lib');
@@ -32,6 +33,7 @@ const applyHandlersOfCallbacks = (bot) => {
   applyHandlersOfCallbacksForAbout(bot);
   applyHandlersOfCallbacksForAccount(bot);
   applyHandlersOfCallbacksForAffiliate(bot);
+  applyHandlersOfCallbacksForNetwork(bot);
   applyHandlersOfCallbacksForWallet(bot);
 
 
@@ -39,7 +41,10 @@ const applyHandlersOfCallbacks = (bot) => {
     const { callbackQuery } = ctx;
     const url = urlapi.parse(callbackQuery.data);
     const query = url.query === null ? null : querystring.parse(url.query);
-    const ts = query !== null ? base58_to_int(query.ts) : null;
+    let ts = 0;
+    if (query !== null && query.ts !== undefined)
+      ts = base58_to_int(query.ts);
+
     ctx.answerCbQuery(msgOhSorry(ctx));
     ctx.log.warn(
       'not found callback_query handler',

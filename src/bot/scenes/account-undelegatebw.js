@@ -2,7 +2,7 @@ const WizardScene = require('telegraf/scenes/wizard');
 const getExtra = require('../extra');
 const { kbMain, kbListAndCancel, kbCancel } = require('../keyboards');
 const { msgCancelled } = require('../messages');
-const { sendMenuTransaction } = require('../handlers/lib');
+const { sendMenuTransaction, sendMenuTransactionError } = require('../handlers/lib');
 const logger = require('../../logger');
 const log = logger.getLogger('scene:account-create');
 const SS = require('../../lib/smart-stringify');
@@ -113,7 +113,7 @@ const scene = new WizardScene('account-undelegatebw',
         log.error(error);
         log.error(SS(error));
         const extra = getExtra({ html: true });
-        ctx.reply('<b>Узел LeoPays вернул ошибку при обработке транзакции.</b>\n\n' + SS(error), extra);
+        ctx.reply(sendMenuTransactionError(ctx, error), extra);
       });
     }
 

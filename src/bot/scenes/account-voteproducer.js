@@ -4,7 +4,7 @@ const urlapi = require('url');
 const getExtra = require('../extra');
 const { kbMain, kbListAndCancel, kbCancel, kbCancelNext, kbCancelSkip, ikbMenuProducers } = require('../keyboards');
 const { msgCancelled } = require('../messages');
-const { sendMenuTransaction } = require('../handlers/lib');
+const { sendMenuTransaction, sendMenuTransactionError } = require('../handlers/lib');
 const logger = require('../../logger');
 const log = logger.getLogger('scene:account-create');
 const SS = require('../../lib/smart-stringify');
@@ -74,7 +74,7 @@ const scene = new WizardScene('account-voteproducer',
         session.temp.producersData = await leopays.rpc.get_table_rows({
           code: 'lpc', scope: 'lpc', table: 'producers',
           index_position: 2, key_type: 'float64',
-          limit: 30,
+          limit: 50,
         });
 
         const keyboard2 = ikbMenuProducers(session.temp.producersData);
@@ -92,7 +92,7 @@ const scene = new WizardScene('account-voteproducer',
           log.error(error);
           log.error(SS(error));
           const extra = getExtra({ html: true });
-          ctx.reply('<b>Узел LeoPays вернул ошибку при обработке транзакции.</b>\n\n' + SS(error), extra);
+          ctx.reply(sendMenuTransactionError(ctx, error), extra);
         });
 
         const text = 'Отправка транзакции.';
@@ -148,7 +148,7 @@ const scene = new WizardScene('account-voteproducer',
           log.error(error);
           log.error(SS(error));
           const extra = getExtra({ html: true });
-          ctx.reply('<b>Узел LeoPays вернул ошибку при обработке транзакции.</b>\n\n' + SS(error), extra);
+          ctx.reply(sendMenuTransactionError(ctx, error), extra);
         });
 
         const text = 'Отправка транзакции.';

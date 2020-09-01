@@ -7,6 +7,7 @@ const { ikbMenuTransaction,
   kbMenuAccountRegProducerCancelGenerate,
 } = require('../../keyboards');
 const settings = require('../../../../settings');
+const SS = require('../../../lib/smart-stringify');
 const leopays = require('../../../leopays');
 
 
@@ -17,6 +18,11 @@ async function sendMenuTransaction(ctx, transaction) {
   const extra = getExtra({ html: true, keyboard });
   return ctx.reply(text, extra);
 }
+async function sendMenuTransactionError(ctx, errorObj) {
+  const extra = getExtra({ html: true, keyboard });
+  return ctx.reply(sendMenuTransactionError(ctx, error), extra);
+}
+
 
 
 async function sendMenuAccounts(ctx) {
@@ -102,6 +108,7 @@ async function sendMenuAccountRegProd(ctx, account) {
 
 module.exports = {
   sendMenuTransaction,
+  sendMenuTransactionError,
   sendMenuAccounts,
   editMenuToAccounts,
   sendMenuAccountCreate,

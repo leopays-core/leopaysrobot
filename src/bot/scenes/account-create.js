@@ -4,7 +4,7 @@ const TGUser = mongoose.model('TGUser');
 const getExtra = require('../extra');
 const { kbMain } = require('../keyboards');
 const { msgCancelled } = require('../messages');
-const { sendMenuAccountCreate, sendMenuTransaction } = require('../handlers/lib');
+const { sendMenuAccountCreate, sendMenuTransaction, sendMenuTransactionError } = require('../handlers/lib');
 const logger = require('../../logger');
 const log = logger.getLogger('scene:account-create');
 const SS = require('../../lib/smart-stringify');
@@ -82,7 +82,7 @@ const scene = new WizardScene('account-create',
               log.error(error);
               log.error(SS(error));
               const extra = getExtra({ html: true });
-              ctx.reply('<b>Узел LeoPays вернул ошибку при обработке транзакции.</b>\n\n' + SS(error), extra);
+              ctx.reply(sendMenuTransactionError(ctx, error), extra);
             });
           } catch (error) {
             log.error(error);
