@@ -19,8 +19,10 @@ async function sendMenuTransaction(ctx, transaction) {
   return ctx.reply(text, extra);
 }
 async function sendMenuTransactionError(ctx, errorObj) {
+  let txt = `<b>Узел LeoPays вернул ошибку</b>\n\n`;
+  txt += SS(errorObj);
   const extra = getExtra({ html: true });
-  return ctx.reply(sendMenuTransactionError(ctx, error), extra);
+  return ctx.reply(txt, extra);
 }
 
 
