@@ -9,6 +9,7 @@ const accountKeyboards = require('./account');
 const walletKeyboards = require('./wallet');
 const settings = require('../../../settings');
 const cfg = require('../../config');
+const stringToBoolean = require('../../lib/string-to-boolean');
 
 
 
@@ -24,6 +25,13 @@ const kbStart = (ctx) => {
 const kbCancel = (ctx) => {
   const kbArray = [
     button(ctx.i18n.t('Cancel'))
+  ];
+  return keyboard(kbArray).resize();
+}
+const kbCancelNext = (ctx) => {
+  const kbArray = [
+    button(ctx.i18n.t('Cancel')),
+    button(ctx.i18n.t('Next'))
   ];
   return keyboard(kbArray).resize();
 }
@@ -91,6 +99,31 @@ const ikbMenuShortInfo = (ctx) => {
 }
 
 
+const ikbMenuProducers = (producersdata = { rows: [], more: false }, selectes = []) => {
+  const kbArray = [];
+  console.log(producersdata)
+  for (let i in producersdata.rows) {
+    const pathname = '';
+    const query = {
+      p: producersdata.rows[i].owner,
+      m: producersdata.rows[i].more,
+    };
+    const isActive = stringToBoolean(producersdata.rows[i].is_active);
+    if (isActive)
+      kbArray.push([
+        callbackButton(
+          producersdata.rows[i].owner,
+          urlapi.format({ pathname, query, }),
+        ),
+      ]);
+  }
+  //'?a=leopaysnode2&m=&v=9153188755689658.00000000000000000'
+  console.log(kbArray)
+  return inlineKeyboard(kbArray);
+}
+
+
+
 const ikbMenuBack = (ctx, data) => {
   const { i18n } = ctx;
   const ts = int_to_base58(Math.round(new Date().getTime() / 1000));
@@ -149,6 +182,7 @@ const ikbMenuSelecAccount = (ctx, pathname, accounts) => {
 module.exports = {
   kbStart,
   kbCancel,
+  kbCancelNext,
   kbCancelSkip,
   kbListAndCancel,
   kbIAgree,
@@ -157,6 +191,7 @@ module.exports = {
   ikbMenuShortInfo,
   ikbMenuTransaction,
   ikbMenuSelecAccount,
+  ikbMenuProducers,
   ...aboutKeyboards,
   ...accountKeyboards,
   ...walletKeyboards,

@@ -1,6 +1,8 @@
 const WizardScene = require('telegraf/scenes/wizard');
+const querystring = require('querystring');
+const urlapi = require('url');
 const getExtra = require('../extra');
-const { kbMain, kbListAndCancel, kbCancel, kbCancelSkip } = require('../keyboards');
+const { kbMain, kbListAndCancel, kbCancel, kbCancelNext, kbCancelSkip, ikbMenuProducers } = require('../keyboards');
 const { msgCancelled } = require('../messages');
 const { sendMenuTransaction } = require('../handlers/lib');
 const logger = require('../../logger');
@@ -13,6 +15,7 @@ const leopays = require('../../leopays');
 const scene = new WizardScene('account-voteproducer',
   (ctx) => {
     const { session } = ctx;
+    session.temp.producers = [];
     const text = `Выберите аккаунт с которого вы хотите проголосовать.`
     const keyboard = kbListAndCancel(ctx, session.user.accounts);
     const extra = getExtra({ html: true, keyboard });
@@ -50,7 +53,7 @@ const scene = new WizardScene('account-voteproducer',
       return ctx.scene.leave();
     }
   },
-  (ctx) => {
+  async (ctx) => {
     const { session } = ctx;
     if (ctx.updateType === 'message') {
       if (ctx.message.text === ctx.i18n.t('Cancel')) {
@@ -63,9 +66,21 @@ const scene = new WizardScene('account-voteproducer',
 
       if (ctx.message.text === ctx.i18n.t('Skip')) {
         session.temp.proxy = undefined;
-        const keyboard = kbCancel(ctx);
+        const keyboard = kbCancelNext(ctx);
+        const text = `Перечислите аккаунты тех производителей блоков за которых вы хотие проголосовать или выберите в меню.`;
         const extra = getExtra({ html: true, keyboard });
-        ctx.reply(`Перечислите аккаунты тех производителей блоков за которых вы хотие проголосовать`, extra);
+        ctx.reply(text, extra);
+        //leopays.rpc.get_producer_schedule({json:true});
+        session.temp.producersData = await leopays.rpc.get_table_rows({
+          code: 'lpc', scope: 'lpc', table: 'producers',
+          index_position: 2, key_type: 'float64',
+          limit: 30,
+        });
+
+        const keyboard2 = ikbMenuProducers(session.temp.producersData);
+        const text2 = `<b>Список производителей</b>`;
+        const extra2 = getExtra({ html: true, keyboard: keyboard2 });
+        ctx.reply(text2, extra2);
         return ctx.wizard.next();
       } else {
         session.temp.proxy = ctx.message.text.toLowerCase().trim();
@@ -93,6 +108,26 @@ const scene = new WizardScene('account-voteproducer',
   },
   (ctx) => {
     const { session } = ctx;
+    if (ctx.updateType === 'callback_query') {
+      const url = urlapi.parse(ctx.callbackQuery.data);
+      const query = url.query === null ? null : querystring.parse(url.query);
+      let addText = '';
+
+      if (session.temp.producers.length <= 30) {
+        if (session.temp.producers.includes(query.p))
+          session.temp.producers = session.temp.producers.filter((element) => element !== query.p);
+        else
+          session.temp.producers.push(query.p);
+      } else
+        addText = '\nНе более 30 производителей';
+      const keyboard2 = ikbMenuProducers(session.temp.producersData, session.temp.producers);
+      let text2 = `<b>Список производителей</b>\n`;
+      for (let i in session.temp.producers)
+        text2 += ' ' + session.temp.producers[i] + ', ';
+      text2 += addText;
+      const extra2 = getExtra({ html: true, keyboard: keyboard2 });
+      ctx.editMessageText(text2, extra2);
+    }
     if (ctx.updateType === 'message') {
       if (ctx.message.text === ctx.i18n.t('Cancel')) {
         const text = msgCancelled(ctx);
@@ -101,35 +136,35 @@ const scene = new WizardScene('account-voteproducer',
         ctx.reply(text, extra);
         return ctx.scene.leave();
       }
+      if (ctx.message.text === ctx.i18n.t('Next')) {
+        session.temp.producers = session.temp.producers.sort();
+        leopays.accountVoteproducer(session.temp).then(async (transaction) => {
+          delete session.temp;
+          sendMenuTransaction(ctx, transaction);
+        }).catch((error) => {
+          log.error(error);
+        });
+
+        const text = 'Отправка транзакции.';
+        const keyboard = kbMain(ctx);
+        const extra = getExtra({ html: true, keyboard });
+        ctx.reply(text, extra);
+        return ctx.scene.leave();
+      }
+      let producersList = ctx.message.text.toLowerCase().trim();
+      producersList = producersList.replace(',', ' ');
+      producersList = producersList.replace('    ', ' ');
+      producersList = producersList.replace('   ', ' ');
+      producersList = producersList.replace('  ', ' ');
+      producersList = producersList.split(' ');
+
+      for (let i in producersList) {
+        let producer = producersList[i].trim();
+        if (session.temp.producers.length <= 30)
+          if (!session.temp.producers.includes(producer))
+            session.temp.producers.push(producer);
+      }
     }
-    let producersList = ctx.message.text.toLowerCase().trim();
-    producersList = producersList.replace(',', ' ');
-    producersList = producersList.replace('    ', ' ');
-    producersList = producersList.replace('   ', ' ');
-    producersList = producersList.replace('  ', ' ');
-    producersList = producersList.split(' ');
-
-    let list = [];
-    for (let i in producersList) {
-      let producer = producersList[i].trim();
-      if (!list.includes(producer))
-        list.push(producer);
-    }
-    list = list.sort();
-    session.temp.producers = list;
-
-    leopays.accountVoteproducer(session.temp).then(async (transaction) => {
-      delete session.temp;
-      sendMenuTransaction(ctx, transaction);
-    }).catch((error) => {
-      log.error(error);
-    });
-
-    const text = 'Отправка транзакции.';
-    const keyboard = kbMain(ctx);
-    const extra = getExtra({ html: true, keyboard });
-    ctx.reply(text, extra);
-    return ctx.scene.leave();
   }
 );
 
