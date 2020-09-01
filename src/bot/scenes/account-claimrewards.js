@@ -48,8 +48,9 @@ const scene = new WizardScene('account-claimrewards',
         //.then(async (trxData) => { console.log(trx.data) }).catch((error) => { log.error((SS(error))); });
       }).catch((error) => {
         log.error(error);
+        log.error(SS(error));
         const extra = getExtra({ html: true });
-        ctx.reply('<b>Нода вернула ошибку</b>', extra);
+        ctx.reply('<b>Узел LeoPays вернул ошибку при обработке транзакции.</b>\n\n' + SS(error), extra);
       });
 
       text = 'Отправка транзакции.'

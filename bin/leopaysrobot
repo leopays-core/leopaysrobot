@@ -9,6 +9,7 @@ const log = require('../src/logger').getLogger('LeoPaysRoBot');
 const { connectDb } = require('../src/mongodb');
 const Server = require('../src/server');
 const getBot = require('../src/bot');
+const SS = require('../src/lib/smart-stringify');
 
 
 
@@ -39,5 +40,6 @@ connectDb('LeoPaysRoBot')
   })
   .catch((error) => {
     log.error(error);
+    log.error(SS(error));
     throw new Error(error);
   });

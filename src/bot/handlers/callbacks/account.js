@@ -51,7 +51,7 @@ const applyHandlersOfCallbacks = (bot) => {
         }).catch((error) => {
           log.error((SS(error)));
           const extra = getExtra({ html: true });
-          ctx.reply('<b>Нода вернула ошибку</b>', extra);
+          ctx.reply('<b>Узел LeoPays вернул ошибку при обработке транзакции.</b>\n\n' + SS(error), extra);
         });
       }
 
@@ -82,7 +82,7 @@ const applyHandlersOfCallbacks = (bot) => {
         }).catch((error) => {
           log.error((SS(error)));
           const extra = getExtra({ html: true });
-          ctx.reply('<b>Нода вернула ошибку</b>', extra);
+          ctx.reply('<b>Узел LeoPays вернул ошибку при обработке транзакции.</b>\n\n' + SS(error), extra);
         });
       }
 

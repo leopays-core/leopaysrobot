@@ -19,6 +19,7 @@ const accountCreate = (params = {}) => {
         log.trace('transaction:', SS(transaction));
         return resolve(transaction);
       } catch (error) {
+        log.error(error);
         log.error(SS(error));
         return reject(error);
       }

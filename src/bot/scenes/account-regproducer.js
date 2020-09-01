@@ -126,8 +126,9 @@ const scene = new WizardScene('account-regproducer',
           return ctx.wizard.next();
         }).catch((error) => {
           log.error(error);
+          log.error(SS(error));
           const extra = getExtra({ html: true });
-          ctx.reply('<b>Нода вернула ошибку</b>', extra);
+          ctx.reply('<b>Узел LeoPays вернул ошибку при обработке транзакции.</b>\n\n' + SS(error), extra);
         });
       }
 
@@ -144,7 +145,7 @@ const scene = new WizardScene('account-regproducer',
         }).catch((error) => {
           log.error((SS(error)));
           const extra = getExtra({ html: true });
-          ctx.reply('<b>Нода вернула ошибку</b>', extra);
+          ctx.reply('<b>Узел LeoPays вернул ошибку при обработке транзакции.</b>\n\n' + SS(error), extra);
         });
       }
 

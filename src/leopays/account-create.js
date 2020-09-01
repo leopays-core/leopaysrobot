@@ -174,6 +174,7 @@ const initAccountCreate = (params) => {
         log.trace('transaction4:', SS(transaction4));
         return resolve(transaction1);
       } catch (error) {
+        log.error(error);
         log.error(SS(error));
         return reject(error);
       }

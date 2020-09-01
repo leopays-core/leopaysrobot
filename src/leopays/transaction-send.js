@@ -20,10 +20,12 @@ const initTransactionSend = (params) => {
           })
           .catch((error) => {
             log.error(error);
+            log.error(SS(error));
             return reject(error);
           });
       } catch (error) {
         log.error(error);
+        log.error(SS(error));
         return reject(error);
       }
     });

@@ -18,10 +18,12 @@ const initAccountUndelegatebw = (params) => {
           return resolve(transaction);
         })
           .catch((error) => {
+            log.error(error);
             log.error(SS(error));
             return reject(error);
           });
       } catch (error) {
+        log.error(error);
         log.error(SS(error));
         return reject(error);
       }

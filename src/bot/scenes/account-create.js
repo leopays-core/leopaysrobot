@@ -80,11 +80,13 @@ const scene = new WizardScene('account-create',
 
             }).catch((error) => {
               log.error(error);
+              log.error(SS(error));
               const extra = getExtra({ html: true });
-              ctx.reply('<b>Нода вернула ошибку</b>', extra);
+              ctx.reply('<b>Узел LeoPays вернул ошибку при обработке транзакции.</b>\n\n' + SS(error), extra);
             });
           } catch (error) {
             log.error(error);
+            log.error(SS(error));
             const text = `<b>Ошибка в процессе создания аккаунта.</b>`;
             const extra = getExtra({ html: true });
             ctx.reply(text, extra);
