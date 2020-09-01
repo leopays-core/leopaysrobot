@@ -113,7 +113,7 @@ const scene = new WizardScene('account-undelegatebw',
         log.error(error);
         log.error(SS(error));
         const extra = getExtra({ html: true });
-        ctx.reply(sendMenuTransactionError(ctx, error), extra);
+        return sendMenuTransactionError(ctx, error);
       });
     }
 
