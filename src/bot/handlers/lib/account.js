@@ -19,7 +19,7 @@ async function sendMenuTransaction(ctx, transaction) {
   return ctx.reply(text, extra);
 }
 async function sendMenuTransactionError(ctx, errorObj) {
-  const extra = getExtra({ html: true, keyboard });
+  const extra = getExtra({ html: true });
   return ctx.reply(sendMenuTransactionError(ctx, error), extra);
 }
 
