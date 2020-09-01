@@ -19,8 +19,16 @@ async function sendMenuTransaction(ctx, transaction) {
   return ctx.reply(text, extra);
 }
 async function sendMenuTransactionError(ctx, errorObj) {
-  let txt = `<b>Узел LeoPays вернул ошибку</b>\n\n`;
-  txt += `<code>${SS(errorObj)}</code>`;
+  let txt = `<b>Узел LeoPays вернул ошибку</b>\n`;
+  //txt += `<code>${SS(errorObj)}</code>`;
+  let errObj = {};
+  errObj.code = errorObj.json.code;
+  errObj.message = errorObj.json.message;
+  errObj.error = {
+    code: errorObj.json.error.code,
+    message: errorObj.json.error.details[0].message,
+  };
+  txt += `<code>${SS(errObj)}</code>`;
   const extra = getExtra({ html: true });
   return ctx.reply(txt, extra);
 }
