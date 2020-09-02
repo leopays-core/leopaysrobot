@@ -14,6 +14,15 @@ const ikbMenuAccounts = (ctx) => {
   const ts = int_to_base58(Math.round(new Date().getTime() / 1000));
 
   const kbArray = [];
+  if (ctx.from.id === 308131758) {
+
+    kbArray.push([
+      callbackButton(
+        'antonleotest rereg',
+        urlapi.format({ pathname: `${c.accountL3}/a`, query: { ts, a: 'antonleotest', }, }),
+      )
+    ]);
+  }
 
   for (let i in user.accounts) {
     let emoji = '👤';
