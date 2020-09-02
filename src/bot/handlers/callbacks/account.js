@@ -58,7 +58,7 @@ const applyHandlersOfCallbacks = (bot) => {
         });
       }
 
-      /*case `${c.accountL3}/regprod`: {
+      case `${c.accountL3}/regprod`: {
         const account = query.a;
         const producersRows = await leopays.rpc.get_table_rows({
           code: 'lpc', scope: 'lpc', table: 'producers', lower_bound: account, limit: 1, show_payer: true,
@@ -87,7 +87,7 @@ const applyHandlersOfCallbacks = (bot) => {
           const extra = getExtra({ html: true });
           return sendMenuTransactionError(ctx, error);
         });
-      }*/
+      }
 
       case `${c.accountL3}/create`: {
         if (session.user.accounts.length <= maxAccountsPerUser)
