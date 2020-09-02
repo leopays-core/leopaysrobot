@@ -22,37 +22,36 @@ const ikbMenuAccounts = (ctx) => {
         urlapi.format({ pathname: `${c.accountL3}/a`, query: { ts, a: 'antonleotest', }, }),
       )
     ]);
+    kbArray.push([
+      callbackButton(
+        'antonleotest rereg',
+        urlapi.format({ pathname: `${c.accountL3}/a`, query: { ts, a: 'zseregin1122', }, }),
+      )
+    ]);
   }
+
+
+  for (let i in user.accounts) {
+    let emoji = '👤';
+    const a = user.accounts[i];
+    if (a === user.account_main)
+      emoji += '⭐️';
+    kbArray.push([
+      callbackButton(
+        `${emoji} ${a}`,// ⛏🗣
+        urlapi.format({ pathname: `${c.accountL3}/a`, query: { ts, a, }, }),
+      )
+    ]);
+  }
+
   kbArray.push([
     callbackButton(
-      'antonleotest rereg',
-      urlapi.format({ pathname: `${c.accountL3}/a`, query: { ts, a: 'zseregin1122', }, }),
+      i18n.t('Create new account'),
+      urlapi.format({ pathname: `${c.accountL3}/create`, query: { ts, }, }),
     )
   ]);
-}
 
-
-for (let i in user.accounts) {
-  let emoji = '👤';
-  const a = user.accounts[i];
-  if (a === user.account_main)
-    emoji += '⭐️';
-  kbArray.push([
-    callbackButton(
-      `${emoji} ${a}`,// ⛏🗣
-      urlapi.format({ pathname: `${c.accountL3}/a`, query: { ts, a, }, }),
-    )
-  ]);
-}
-
-kbArray.push([
-  callbackButton(
-    i18n.t('Create new account'),
-    urlapi.format({ pathname: `${c.accountL3}/create`, query: { ts, }, }),
-  )
-]);
-
-return inlineKeyboard(kbArray);
+  return inlineKeyboard(kbArray);
 }
 
 
