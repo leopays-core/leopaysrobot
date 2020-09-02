@@ -3,7 +3,7 @@ const getExtra = require('../extra');
 const { kbMain, kbCancelSkip } = require('../keyboards');
 const {
   msgCancelled, msgSendingTheTransaction, msgUseTheseKeysToStartBlockProduction,
-  msgSendTheAddressOfYourNode,
+  msgSendTheAddressOfYourNode, msgSendTheYourCountryCode,
 } = require('../messages');
 const {
   sendMenuAccountRegProd, sendMenuTransaction, sendMenuTransactionError,
