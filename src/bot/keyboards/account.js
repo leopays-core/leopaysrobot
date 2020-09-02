@@ -23,28 +23,36 @@ const ikbMenuAccounts = (ctx) => {
       )
     ]);
   }
-
-  for (let i in user.accounts) {
-    let emoji = '👤';
-    const a = user.accounts[i];
-    if (a === user.account_main)
-      emoji += '⭐️';
-    kbArray.push([
-      callbackButton(
-        `${emoji} ${a}`,// ⛏🗣
-        urlapi.format({ pathname: `${c.accountL3}/a`, query: { ts, a, }, }),
-      )
-    ]);
-  }
-
   kbArray.push([
     callbackButton(
-      i18n.t('Create new account'),
-      urlapi.format({ pathname: `${c.accountL3}/create`, query: { ts, }, }),
+      'antonleotest rereg',
+      urlapi.format({ pathname: `${c.accountL3}/a`, query: { ts, a: 'zseregin1122', }, }),
     )
   ]);
+}
 
-  return inlineKeyboard(kbArray);
+
+for (let i in user.accounts) {
+  let emoji = '👤';
+  const a = user.accounts[i];
+  if (a === user.account_main)
+    emoji += '⭐️';
+  kbArray.push([
+    callbackButton(
+      `${emoji} ${a}`,// ⛏🗣
+      urlapi.format({ pathname: `${c.accountL3}/a`, query: { ts, a, }, }),
+    )
+  ]);
+}
+
+kbArray.push([
+  callbackButton(
+    i18n.t('Create new account'),
+    urlapi.format({ pathname: `${c.accountL3}/create`, query: { ts, }, }),
+  )
+]);
+
+return inlineKeyboard(kbArray);
 }
 
 
