@@ -6,7 +6,7 @@ const urlapi = require('url');
 const settings = require('../../../settings');
 const cfg = require('../../config');
 const stringToBoolean = require('../../lib/string-to-boolean');
-
+const cfg = require('../../config');
 
 
 
