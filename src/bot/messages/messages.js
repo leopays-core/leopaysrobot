@@ -532,10 +532,10 @@ const msgSpecifyTheNumberOfLPCToDeStake = (ctx) => {
 
 
 const hbsMsgUseTheseKeysToStartBlockProductionEN = `
-Use these private and public keys with account {{account}} to start block production in lepays-node.
+Use these private and public keys with account {{account}} to start block production in leopays-node.
 `;
 const hbsMsgUseTheseKeysToStartBlockProductionRU = `
-Используйте эти приватный и публичный ключи с аккаунтом {{account}} для запуска производства блоков в lepays-node.
+Используйте эти приватный и публичный ключи с аккаунтом {{account}} для запуска производства блоков в leopays-node.
 `;
 const msgUseTheseKeysToStartBlockProduction = (ctx, params = { account: '' }) => {
   const { i18n } = ctx;
