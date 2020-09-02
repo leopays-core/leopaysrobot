@@ -72,7 +72,7 @@ const ikbMenuAccount = (ctx, account, accInfo, prodInfo) => {
     ]);
   }
 
-  {
+  /*{
     let emoji = '☑️';
     const is_active = prodInfo.is_active ? prodInfo.is_active : false;
     if (is_active) emoji = '✅';
@@ -81,7 +81,7 @@ const ikbMenuAccount = (ctx, account, accInfo, prodInfo) => {
     kbArray.push([
       callbackButton(i18n.t(`${emoji} Производитель блоков`), urlapi.format({ pathname, query, })),
     ]);
-  }
+  }*/
 
   kbArray.push([
     callbackButton(
