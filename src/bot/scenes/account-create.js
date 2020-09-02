@@ -3,14 +3,20 @@ const mongoose = require('mongoose');
 const TGUser = mongoose.model('TGUser');
 const getExtra = require('../extra');
 const { kbMain } = require('../keyboards');
-const { msgCancelled } = require('../messages');
-const { sendMenuAccountCreate, sendMenuTransaction, sendMenuTransactionError } = require('../handlers/lib');
+const {
+  msgCancelled, msgSendingTheTransaction, msgErrorInTheAccountCreation,
+  msgInvalidAccountName, msgAccountCreationStarted, msgThisAccountAlreadyTaken,
+} = require('../messages');
+const {
+  sendMenuAccountCreate, sendMenuTransaction, sendMenuTransactionError,
+} = require('../handlers/lib');
 const logger = require('../../logger');
 const log = logger.getLogger('scene:account-create');
 const SS = require('../../lib/smart-stringify');
 const leopays = require('../../leopays');
 const settings = require('../../../settings');
-const { explorer, newAccountDefaultCreator } = settings;
+const { newAccountDefaultCreator } = settings;
+
 
 
 const scene = new WizardScene('account-create',
@@ -19,12 +25,12 @@ const scene = new WizardScene('account-create',
     return ctx.wizard.next();
   },
   (ctx) => {
-    const { session } = ctx;
+    const { i18n, session } = ctx;
     if (ctx.updateType === 'message') {
       let text = '';
       let incorrect = false;
 
-      if (ctx.message.text === ctx.i18n.t('Cancel')) {
+      if (ctx.message.text === i18n.t('Cancel')) {
         text = msgCancelled(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
@@ -43,15 +49,13 @@ const scene = new WizardScene('account-create',
         incorrect = true;
 
       if (incorrect) {
-        const textEN = `<b>Invalid account name</b>`;
-        const textRU = `<b>Неверное имя аккаунта</b>`;
-        text = (ctx.i18n.locale() === 'en') ? textEN : textRU;
+        text = msgInvalidAccountName(ctx);
       } else {
-        text = `<b>Запущено создание аккаунта</b>: /a_${newAccountName}`;
+        text = msgAccountCreationStarted(ctx) + `\n/a_${newAccountName}`;
       }
 
       leopays.rpc.get_account(newAccountName).then((data) => {
-        const text = `<b>Этот аккаунт (${newAccountName}) уже занят.</b> Попробуйте другое имя.`;
+        const text = msgThisAccountAlreadyTaken(ctx);
         const extra = getExtra({ html: true });
         ctx.reply(text, extra);
       })
@@ -81,20 +85,19 @@ const scene = new WizardScene('account-create',
             }).catch((error) => {
               log.error(error);
               log.error(SS(error));
-              const extra = getExtra({ html: true });
               return sendMenuTransactionError(ctx, error);
             });
           } catch (error) {
             log.error(error);
             log.error(SS(error));
-            const text = `<b>Ошибка в процессе создания аккаунта.</b>`;
+            const text = msgErrorInTheAccountCreation(ctx);
             const extra = getExtra({ html: true });
             ctx.reply(text, extra);
           }
         });
     }
 
-    text = 'Отправка транзакции'
+    text = msgSendingTheTransaction(ctx);
     const keyboard = kbMain(ctx);
     const extra = getExtra({ html: true, keyboard });
     ctx.reply(text, extra);

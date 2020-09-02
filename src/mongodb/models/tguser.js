@@ -35,6 +35,7 @@ const schema = new Schema({
   },
   redirect: { type: String, trim: true, default: null, },
 
+  language: { type: String, ref: 'Language', lowercase: true, trim: true, index: true, sparse: true, },
   accounts: [{ type: String, lowercase: true, trim: true, }],
   account_main: { type: String, lowercase: true, trim: true, },
   parent: { type: Number, index: true, sparse: true, },

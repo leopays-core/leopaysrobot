@@ -1,7 +1,10 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const getExtra = require('../extra');
-const { kbMain, kbListAndCancel, kbCancel } = require('../keyboards');
-const { msgCancelled } = require('../messages');
+const { kbMain, kbListAndCancel } = require('../keyboards');
+const {
+  msgCancelled, msgSendingTheTransaction, msgSelectTheFromAccountToWithdrawFromRefund,
+  msgTooEarly, msgFundsWillBeAvailableNoEarlierThan,
+} = require('../messages');
 const { sendMenuTransaction, sendMenuTransactionError } = require('../handlers/lib');
 const logger = require('../../logger');
 const log = logger.getLogger('scene:account-create');
@@ -13,18 +16,18 @@ const leopays = require('../../leopays');
 const scene = new WizardScene('account-refund',
   (ctx) => {
     const { session } = ctx;
-    const text = `Выберите аккаунт с которого вы хотите забрать средства из refund.`
+    const text = msgSelectTheFromAccountToWithdrawFromRefund(ctx);
     const keyboard = kbListAndCancel(ctx, session.user.accounts);
     const extra = getExtra({ html: true, keyboard });
     ctx.reply(text, extra);
     return ctx.wizard.next();
   },
   async (ctx) => {
-    const { session } = ctx;
+    const { i18n, session } = ctx;
     let incorrect = false;
     let tooEarly = false;
     if (ctx.updateType === 'message') {
-      if (ctx.message.text === ctx.i18n.t('Cancel')) {
+      if (ctx.message.text === i18n.t('Cancel')) {
         const text = msgCancelled(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
@@ -56,8 +59,8 @@ const scene = new WizardScene('account-refund',
         }
 
         if (tooEarly) {
-          let text = '<b>Слишком рано!</b>'
-          text += '\nСредства будут доступны не ранее ' + new Date(claimTime).toUTCString() + '.';
+          let text = msgTooEarly(ctx);
+          text += `\n${msgFundsWillBeAvailableNoEarlierThan(ctx)} ` + new Date(claimTime).toUTCString() + '.';
           const extra = getExtra({ html: true });
           ctx.reply(text, extra);
         } else {
@@ -65,15 +68,20 @@ const scene = new WizardScene('account-refund',
           session.temp.unstake_cpu_quantity = `${(cpuQuantity / 10000).toFixed(4)} LPC`;
           delete session.temp.quantity;
           session.temp.transfer = false;
-          return leopays.accountUndelegatebw(session.temp).then(async (transaction) => {
+          leopays.accountUndelegatebw(session.temp).then(async (transaction) => {
             delete session.temp;
-            return sendMenuTransaction(ctx, transaction);
+            sendMenuTransaction(ctx, transaction);
           }).catch((error) => {
             log.error(error);
             log.error(SS(error));
-            const extra = getExtra({ html: true });
-            return sendMenuTransactionError(ctx, error);
+            sendMenuTransactionError(ctx, error);
           });
+
+          const text = msgSendingTheTransaction(ctx);
+          const keyboard = kbMain(ctx);
+          const extra = getExtra({ html: true, keyboard });
+          ctx.reply(text, extra);
+          return ctx.scene.leave();
         }
       }
 

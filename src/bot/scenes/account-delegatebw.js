@@ -1,7 +1,10 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const getExtra = require('../extra');
-const { kbMain, kbListAndCancel, kbCancel } = require('../keyboards');
-const { msgCancelled } = require('../messages');
+const { kbMain, kbListAndCancel } = require('../keyboards');
+const {
+  msgCancelled, msgSendingTheTransaction, msgSelectFromAccountToStake,
+  msgSpecifyTheNumberOfLPCToStake, msgAvailableToYou,
+} = require('../messages');
 const { sendMenuTransaction, sendMenuTransactionError } = require('../handlers/lib');
 const logger = require('../../logger');
 const log = logger.getLogger('scene:account-create');
@@ -13,17 +16,17 @@ const leopays = require('../../leopays');
 const scene = new WizardScene('account-delegatebw',
   (ctx) => {
     const { session } = ctx;
-    const text = `Выберите аккаунт с которого вы хотите застейковать.`
+    const text = msgSelectFromAccountToStake(ctx);
     const keyboard = kbListAndCancel(ctx, session.user.accounts);
     const extra = getExtra({ html: true, keyboard });
     ctx.reply(text, extra);
     return ctx.wizard.next();
   },
   async (ctx) => {
-    const { session } = ctx;
+    const { i18n, session } = ctx;
     let incorrect = false;
     if (ctx.updateType === 'message') {
-      if (ctx.message.text === ctx.i18n.t('Cancel')) {
+      if (ctx.message.text === i18n.t('Cancel')) {
         const text = msgCancelled(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
@@ -37,11 +40,10 @@ const scene = new WizardScene('account-delegatebw',
         incorrect = true;
 
       if (!incorrect) {
-        let text = `Укажите числом количество LPC которое вы хотите застейковать.`;
+        let text = msgSpecifyTheNumberOfLPCToStake(ctx);
         const acc = await leopays.rpc.get_account(session.temp.from);
         let avaible = 0;
         let refundsLPC = 0;
-        let refundsRequestTime = '';
         const refunds = await leopays.rpc.get_table_rows({
           json: true, code: 'lpc', table: 'refunds', scope: session.temp.from,
         });
@@ -53,7 +55,8 @@ const scene = new WizardScene('account-delegatebw',
         }
         avaible += refundsLPC;
         avaible += parseInt(parseFloat(acc.core_liquid_balance.split(' ')[0]) * 10000);
-        text += `\nВам доступно: ${(avaible / 10000).toFixed(4)} LPC`;
+
+        text += `\n${msgAvailableToYou(ctx)}: ${(avaible / 10000).toFixed(4)} LPC`;
         const keyboard = kbListAndCancel(ctx, session.user.accounts);
         const extra = getExtra({ html: true, keyboard });
         ctx.reply(text, extra);
@@ -68,9 +71,9 @@ const scene = new WizardScene('account-delegatebw',
     }
   },
   (ctx) => {
-    const { session } = ctx;
+    const { i18n, session } = ctx;
     if (ctx.updateType === 'message') {
-      if (ctx.message.text === ctx.i18n.t('Cancel')) {
+      if (ctx.message.text === i18n.t('Cancel')) {
         const text = msgCancelled(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
@@ -81,8 +84,7 @@ const scene = new WizardScene('account-delegatebw',
       session.temp.quantity = ctx.message.text.toLowerCase().trim().replace(' ', '');
       if (/[A-Za-z]/i.test(session.temp.quantity)) {
         session.temp.quantity = parseInt(parseFloat(/[0-9.,]+/.exec(session.temp.quantity)[0]) * 10000) / 10000;
-      }
-      else
+      } else
         session.temp.quantity = parseInt(parseFloat(session.temp.quantity) * 10000) / 10000;
 
       session.temp.transfer = false;
@@ -93,12 +95,11 @@ const scene = new WizardScene('account-delegatebw',
       }).catch((error) => {
         log.error(error);
         log.error(SS(error));
-        const extra = getExtra({ html: true });
         return sendMenuTransactionError(ctx, error);
       });
     }
 
-    const text = 'Отправка транзакции.';
+    const text = msgSendingTheTransaction(ctx);
     const keyboard = kbMain(ctx);
     const extra = getExtra({ html: true, keyboard });
     ctx.reply(text, extra);

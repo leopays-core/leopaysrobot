@@ -1,11 +1,11 @@
 const Handlebars = require('handlebars');
-const { int_to_base58 } = require('base58');
 const settings = require('../../../settings');
 
 
 
 const hbsMsgMenuAccountsEN = `
-List of your accounts.`;
+List of your accounts.
+`;
 const hbsMsgMenuAccountsRU = `
 Список ваших аккаунтов.
 `;
@@ -50,15 +50,25 @@ const msgMenuAccountCreate = (ctx) => {
 
 
 const hbsMsgMenuAccountEN = `
-👤 /a_{{accountName}}{{#if privileged}} 👑{{/if}}
+{{#if privileged}}👑{{else}}👤{{/if}} /a_{{accountName}}
 
-creator: /a_{{creator}}
-RAM {{ram_usage}}/{{ram_quota}}
+<b>Creator</b>: /a_{{creator}}
+
+<b>Resources</b>:
+<b>RAM</b>: usage: {{ram_usage}} / quota:{{ram_quota}} Bytes
+<b>NET</b>: used: {{net_limit.used}} / available: {{cpu_limit.available}} / max: {{cpu_limit.max}} Bytes
+<b>CPU</b>: used: {{cpu_limit.used}} / available: {{cpu_limit.available}} / max: {{cpu_limit.max}} µs
+
+{{#if voter_info}}
+{{#if voter_info.is_proxy}}✅{{else}}☑️{{/if}} <b>Proxy</b>
+{{#if voter_info.proxy}}<b>Proxied to</b>: {{voter_info.proxy}}{{/if}}
+{{/if}}
+{{#if prodInfo}}{{#if prodInfo.is_active}}✅{{else}}☑️{{/if}} <b>Block producer</b>{{/if}}
 `;
 const hbsMsgMenuAccountRU = `
 {{#if privileged}}👑{{else}}👤{{/if}} /a_{{accountName}}
 
-<b>Creator</b>: /a_{{creator}}
+<b>Создатель</b>: /a_{{creator}}
 
 <b>Ресурсы</b>:
 <b>RAM</b>: usage: {{ram_usage}} / quota:{{ram_quota}} Bytes
@@ -98,7 +108,6 @@ LPC...
 `;
 const msgMenuAccountSendPubKey = (ctx) => {
   const { i18n } = ctx;
-  const { company } = settings;
   let hbsText = '';
   switch (i18n.shortLanguageCode) {
     case 'en': hbsText = hbsMsgMenuAccountSendPubKeyEN; break;

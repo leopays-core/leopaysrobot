@@ -135,7 +135,7 @@ module.exports = applyMiddlewares;
 
 
 async function updateUser(ctx) {
-  const { session } = ctx;
+  const { session, i18n } = ctx;
 
   ctx.getChat()
     .then(async (data) => {
@@ -190,8 +190,13 @@ async function updateUser(ctx) {
 
 
 async function setDefaultsForNewUser(ctx) {
+  const { i18n, session } = ctx;
+  const { user } = session;
   const { public_name } = settings;
-  const { user } = ctx.session;
+
+  user.language === undefined
+    ? user.language = i18n.locale()
+    : i18n.locale(user.language);
 
   if (!user.public_name && public_name.enabled)
     user.public_name = await getRendomPublicName(user, settings);

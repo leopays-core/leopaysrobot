@@ -1,7 +1,10 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const getExtra = require('../extra');
-const { kbMain, kbListAndCancel, kbCancel } = require('../keyboards');
-const { msgCancelled } = require('../messages');
+const { kbMain, kbListAndCancel } = require('../keyboards');
+const {
+  msgCancelled, msgSendingTheTransaction, msgAvailableToYou,
+  msgSpecifyTheNumberOfLPCToDeStake,
+} = require('../messages');
 const { sendMenuTransaction, sendMenuTransactionError } = require('../handlers/lib');
 const logger = require('../../logger');
 const log = logger.getLogger('scene:account-create');
@@ -20,10 +23,10 @@ const scene = new WizardScene('account-undelegatebw',
     return ctx.wizard.next();
   },
   async (ctx) => {
-    const { session } = ctx;
+    const { i18n, session } = ctx;
     let incorrect = false;
     if (ctx.updateType === 'message') {
-      if (ctx.message.text === ctx.i18n.t('Cancel')) {
+      if (ctx.message.text === i18n.t('Cancel')) {
         const text = msgCancelled(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
@@ -37,10 +40,10 @@ const scene = new WizardScene('account-undelegatebw',
         incorrect = true;
 
       if (!incorrect) {
-        let text = `Укажите числом количество LPC которое вы хотите расстейковать.`;
+        let text = msgSpecifyTheNumberOfLPCToDeStake(ctx);
         session.temp.accInfo = await leopays.rpc.get_account(session.temp.from);
 
-        text += `\nВам доступно: ` + `${(session.temp.accInfo.voter_info ? session.temp.accInfo.voter_info.staked : 0) / 10000} LPC`;
+        text += `\n${msgAvailableToYou(ctx)}: ` + `${(session.temp.accInfo.voter_info ? session.temp.accInfo.voter_info.staked : 0) / 10000} LPC`;
         const keyboard = kbListAndCancel(ctx, session.user.accounts);
         const extra = getExtra({ html: true, keyboard });
         ctx.reply(text, extra);
@@ -55,9 +58,9 @@ const scene = new WizardScene('account-undelegatebw',
     }
   },
   async (ctx) => {
-    const { session } = ctx;
+    const { i18n, session } = ctx;
     if (ctx.updateType === 'message') {
-      if (ctx.message.text === ctx.i18n.t('Cancel')) {
+      if (ctx.message.text === i18n.t('Cancel')) {
         const text = msgCancelled(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
@@ -112,12 +115,11 @@ const scene = new WizardScene('account-undelegatebw',
       }).catch((error) => {
         log.error(error);
         log.error(SS(error));
-        const extra = getExtra({ html: true });
         return sendMenuTransactionError(ctx, error);
       });
     }
 
-    const text = 'Отправка транзакции.';
+    const text = msgSendingTheTransaction(ctx);
     const keyboard = kbMain(ctx);
     const extra = getExtra({ html: true, keyboard });
     ctx.reply(text, extra);

@@ -10,10 +10,10 @@ const ikbMenuAbout = (ctx) => {
   const { i18n } = ctx;
   const { c, explorer } = settings;
   const ts = int_to_base58(Math.round(new Date().getTime() / 1000));
-
-  const kbArray = [];
   const explorerUrl = explorer.global.url + explorer.global.query;
   const explorerUrlLocal = explorer.local.url + explorer.local.query;
+
+  const kbArray = [];
 
   kbArray.push([
     callbackButton(
@@ -23,11 +23,11 @@ const ikbMenuAbout = (ctx) => {
   ]);
 
   kbArray.push([
-    urlButton(i18n.t('Explorer (Bloks.io)'), explorerUrl),
+    urlButton(`${i18n.t('Explorer')} (Bloks.io)`, explorerUrl),
   ]);
   if (cfg.get('env') !== 'production') {
     kbArray.push([
-      urlButton(i18n.t('Explorer (Bloks.io) local node'), explorerUrlLocal),
+      urlButton(`${i18n.t('Explorer')} (Bloks.io) ${i18n.t('Local node')}`, explorerUrlLocal),
     ]);
   }
 

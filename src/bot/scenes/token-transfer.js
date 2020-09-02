@@ -1,33 +1,33 @@
 const WizardScene = require('telegraf/scenes/wizard');
-const mongoose = require('mongoose');
-const TGUser = mongoose.model('TGUser');
 const getExtra = require('../extra');
 const { kbMain, kbListAndCancel, kbCancelSkip, kbCancel } = require('../keyboards');
-const { msgCancelled } = require('../messages');
+const {
+  msgCancelled, msgSendingTheTransaction,
+  msgSelectFromAccountToSendCoins, msgSelectToAccountToSendCoins,
+  msgSpecifyTheNumberOfLPCToSend, msgAvailableToYou, msgFillInTheMemoField,
+} = require('../messages');
 const { sendMenuTransaction, sendMenuTransactionError } = require('../handlers/lib');
 const logger = require('../../logger');
 const log = logger.getLogger('scene:account-create');
 const SS = require('../../lib/smart-stringify');
 const leopays = require('../../leopays');
-const settings = require('../../../settings');
-const BN = require('bignumber.js');
 
 
 
 const scene = new WizardScene('token-transfer',
   (ctx) => {
     const { session } = ctx;
-    const text = `Выберите аккаунт с которого вы хотите отправить монеты.`
+    const text = msgSelectFromAccountToSendCoins(ctx);
     const keyboard = kbListAndCancel(ctx, session.user.accounts);
     const extra = getExtra({ html: true, keyboard });
     ctx.reply(text, extra);
     return ctx.wizard.next();
   },
   (ctx) => {
-    const { session } = ctx;
+    const { i18n, session } = ctx;
     let incorrect = false;
     if (ctx.updateType === 'message') {
-      if (ctx.message.text === ctx.i18n.t('Cancel')) {
+      if (ctx.message.text === i18n.t('Cancel')) {
         const text = msgCancelled(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
@@ -40,7 +40,7 @@ const scene = new WizardScene('token-transfer',
         incorrect = true;
 
       if (!incorrect) {
-        const text = `Укажите аккаунт на который вы хотите отправить монеты.`
+        const text = msgSelectToAccountToSendCoins(ctx);
         const keyboard = kbListAndCancel(ctx, session.user.accounts);
         const extra = getExtra({ html: true, keyboard });
         ctx.reply(text, extra);
@@ -55,10 +55,10 @@ const scene = new WizardScene('token-transfer',
     }
   },
   async (ctx) => {
-    const { session } = ctx;
+    const { i18n, session } = ctx;
     let incorrect = false;
     if (ctx.updateType === 'message') {
-      if (ctx.message.text === ctx.i18n.t('Cancel')) {
+      if (ctx.message.text === i18n.t('Cancel')) {
         const text = msgCancelled(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
@@ -74,10 +74,10 @@ const scene = new WizardScene('token-transfer',
         incorrect = true;
 
       if (!incorrect) {
-        let text = `Укажите числом количество LPC которое вы хотите отправить.`
+        let text = msgSpecifyTheNumberOfLPCToSend(ctx);
         session.temp.accInfo = await leopays.rpc.get_account(session.temp.from);
 
-        text += `\nВам доступно: ${session.temp.accInfo.core_liquid_balance ? session.temp.accInfo.core_liquid_balance : '0 LPC'}`;
+        text += `\n${msgAvailableToYou(ctx)}: ${session.temp.accInfo.core_liquid_balance ? session.temp.accInfo.core_liquid_balance : '0 LPC'}`;
         const keyboard = kbCancel(ctx);
         const extra = getExtra({ html: true, keyboard });
         ctx.reply(text, extra);
@@ -92,9 +92,9 @@ const scene = new WizardScene('token-transfer',
     }
   },
   (ctx) => {
-    const { session } = ctx;
+    const { i18n, session } = ctx;
     if (ctx.updateType === 'message') {
-      if (ctx.message.text === ctx.i18n.t('Cancel')) {
+      if (ctx.message.text === i18n.t('Cancel')) {
         const text = msgCancelled(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
@@ -109,7 +109,7 @@ const scene = new WizardScene('token-transfer',
       else
         session.temp.quantity = parseInt(parseFloat(session.temp.quantity) * 10000) / 10000;
       session.temp.quantity = `${session.temp.quantity.toFixed(4)} LPC`;
-      const text = `Укажите данные в поле 'memo' (Только английские буквы и цифры) или нажмите "Пропустить".`
+      const text = msgFillInTheMemoField(ctx);
       const keyboard = kbCancelSkip(ctx);
       const extra = getExtra({ html: true, keyboard });
       ctx.reply(text, extra);
@@ -118,16 +118,16 @@ const scene = new WizardScene('token-transfer',
     }
   },
   (ctx) => {
-    const { session } = ctx;
+    const { i18n, session } = ctx;
     if (ctx.updateType === 'message') {
-      if (ctx.message.text === ctx.i18n.t('Cancel')) {
+      if (ctx.message.text === i18n.t('Cancel')) {
         const text = msgCancelled(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
         ctx.reply(text, extra);
         return ctx.scene.leave();
       }
-      if (ctx.message.text === ctx.i18n.t('Skip')) {
+      if (ctx.message.text === i18n.t('Skip')) {
         session.temp.memo = '';
       }
 
@@ -135,12 +135,12 @@ const scene = new WizardScene('token-transfer',
         delete session.temp;
         sendMenuTransaction(ctx, transaction);
       }).catch((error) => {
+        log.error(error);
         log.error((SS(error)));
-        const extra = getExtra({ html: true });
         return sendMenuTransactionError(ctx, error);
       });
 
-      const text = 'Отправка транзакции.';
+      const text = msgSendingTheTransaction(ctx);
       const keyboard = kbMain(ctx);
       const extra = getExtra({ html: true, keyboard });
       ctx.reply(text, extra);

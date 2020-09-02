@@ -2,8 +2,13 @@ const WizardScene = require('telegraf/scenes/wizard');
 const querystring = require('querystring');
 const urlapi = require('url');
 const getExtra = require('../extra');
-const { kbMain, kbListAndCancel, kbCancel, kbCancelNext, kbCancelSkip, ikbMenuProducers } = require('../keyboards');
-const { msgCancelled } = require('../messages');
+const {
+  kbMain, kbListAndCancel, kbCancelNext, kbCancelSkip, ikbMenuProducers,
+} = require('../keyboards');
+const {
+  msgCancelled, msgSendingTheTransaction, msgSelectFromAccountToVote,
+  msgSelectProxyAccountToVote, msgListBPAccountsToVote, msgListOfBP,
+} = require('../messages');
 const { sendMenuTransaction, sendMenuTransactionError } = require('../handlers/lib');
 const logger = require('../../logger');
 const log = logger.getLogger('scene:account-create');
@@ -16,17 +21,17 @@ const scene = new WizardScene('account-voteproducer',
   (ctx) => {
     const { session } = ctx;
     session.temp.producers = [];
-    const text = `Выберите аккаунт с которого вы хотите проголосовать.`
+    const text = msgSelectFromAccountToVote(ctx);
     const keyboard = kbListAndCancel(ctx, session.user.accounts);
     const extra = getExtra({ html: true, keyboard });
     ctx.reply(text, extra);
     return ctx.wizard.next();
   },
   async (ctx) => {
-    const { session } = ctx;
+    const { i18n, session } = ctx;
     let incorrect = false;
     if (ctx.updateType === 'message') {
-      if (ctx.message.text === ctx.i18n.t('Cancel')) {
+      if (ctx.message.text === i18n.t('Cancel')) {
         const text = msgCancelled(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
@@ -39,7 +44,7 @@ const scene = new WizardScene('account-voteproducer',
         incorrect = true;
 
       if (!incorrect) {
-        let text = `Если вы хотите передать ваши голоса в управление то отправьте аккаунт proxy или нажмите Пропустить.`;
+        const text = msgSelectProxyAccountToVote(ctx);
         const keyboard = kbCancelSkip(ctx, session.user.accounts);
         const extra = getExtra({ html: true, keyboard });
         ctx.reply(text, extra);
@@ -54,9 +59,9 @@ const scene = new WizardScene('account-voteproducer',
     }
   },
   async (ctx) => {
-    const { session } = ctx;
+    const { i18n, session } = ctx;
     if (ctx.updateType === 'message') {
-      if (ctx.message.text === ctx.i18n.t('Cancel')) {
+      if (ctx.message.text === i18n.t('Cancel')) {
         const text = msgCancelled(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
@@ -64,10 +69,10 @@ const scene = new WizardScene('account-voteproducer',
         return ctx.scene.leave();
       }
 
-      if (ctx.message.text === ctx.i18n.t('Skip')) {
+      if (ctx.message.text === i18n.t('Skip')) {
         session.temp.proxy = undefined;
         const keyboard = kbCancelNext(ctx);
-        const text = `Перечислите аккаунты тех производителей блоков за которых вы хотие проголосовать или выберите в меню.`;
+        const text = msgListBPAccountsToVote(ctx);
         const extra = getExtra({ html: true, keyboard });
         ctx.reply(text, extra);
         //leopays.rpc.get_producer_schedule({json:true});
@@ -78,7 +83,7 @@ const scene = new WizardScene('account-voteproducer',
         });
 
         const keyboard2 = ikbMenuProducers(session.temp.producersData);
-        const text2 = `<b>Список производителей</b>`;
+        const text2 = msgListOfBP(ctx);
         const extra2 = getExtra({ html: true, keyboard: keyboard2 });
         ctx.reply(text2, extra2);
         return ctx.wizard.next();
@@ -91,11 +96,10 @@ const scene = new WizardScene('account-voteproducer',
         }).catch((error) => {
           log.error(error);
           log.error(SS(error));
-          const extra = getExtra({ html: true });
           return sendMenuTransactionError(ctx, error);
         });
 
-        const text = 'Отправка транзакции.';
+        const text = msgSendingTheTransaction(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
         ctx.reply(text, extra);
@@ -110,7 +114,7 @@ const scene = new WizardScene('account-voteproducer',
     return ctx.scene.leave();
   },
   (ctx) => {
-    const { session } = ctx;
+    const { i18n, session } = ctx;
     if (ctx.updateType === 'callback_query') {
       const url = urlapi.parse(ctx.callbackQuery.data);
       const query = url.query === null ? null : querystring.parse(url.query);
@@ -122,9 +126,9 @@ const scene = new WizardScene('account-voteproducer',
         else
           session.temp.producers.push(query.p);
       } else
-        addText = '\nНе более 30 производителей';
+        addText = `\n${msgNoMoreThanMaxBP}`;
       const keyboard2 = ikbMenuProducers(session.temp.producersData, session.temp.producers);
-      let text2 = `<b>Список производителей</b>\n`;
+      let text2 = msgListOfBP(ctx);
       for (let i in session.temp.producers)
         text2 += ' ' + session.temp.producers[i] + ', ';
       text2 += addText;
@@ -132,14 +136,14 @@ const scene = new WizardScene('account-voteproducer',
       ctx.editMessageText(text2, extra2);
     }
     if (ctx.updateType === 'message') {
-      if (ctx.message.text === ctx.i18n.t('Cancel')) {
+      if (ctx.message.text === i18n.t('Cancel')) {
         const text = msgCancelled(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
         ctx.reply(text, extra);
         return ctx.scene.leave();
       }
-      if (ctx.message.text === ctx.i18n.t('Next')) {
+      if (ctx.message.text === i18n.t('Next')) {
         session.temp.producers = session.temp.producers.sort();
         leopays.accountVoteproducer(session.temp).then(async (transaction) => {
           delete session.temp;
@@ -147,11 +151,10 @@ const scene = new WizardScene('account-voteproducer',
         }).catch((error) => {
           log.error(error);
           log.error(SS(error));
-          const extra = getExtra({ html: true });
           return sendMenuTransactionError(ctx, error);
         });
 
-        const text = 'Отправка транзакции.';
+        const text = msgSendingTheTransaction(ctx);
         const keyboard = kbMain(ctx);
         const extra = getExtra({ html: true, keyboard });
         ctx.reply(text, extra);

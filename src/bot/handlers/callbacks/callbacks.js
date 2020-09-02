@@ -5,6 +5,7 @@ const applyHandlersOfCallbacksForAbout = require('./about');
 const applyHandlersOfCallbacksForAccount = require('./account');
 const applyHandlersOfCallbacksForAffiliate = require('./affiliate');
 const applyHandlersOfCallbacksForNetwork = require('./network');
+const applyHandlersOfCallbacksForSettings = require('./settings');
 const applyHandlersOfCallbacksForWallet = require('./wallet');
 const { msgOhSorry, } = require('../../messages');
 const { } = require('../lib');
@@ -17,7 +18,7 @@ const applyHandlersOfCallbacks = (bot) => {
     next().then(() => {
       const url = urlapi.parse(callbackQuery.data);
       const query = url.query === null ? null : querystring.parse(url.query);
-      const ts = query !== null ? base58_to_int(query.ts) : null;
+      const ts = (query !== null && query.ts !== null) ? base58_to_int(query.ts) : null;
       ctx.log.debug(
         `{ "callback_query": {` +
         `"id": ${ctx.callbackQuery.id}, ` +
@@ -34,6 +35,7 @@ const applyHandlersOfCallbacks = (bot) => {
   applyHandlersOfCallbacksForAccount(bot);
   applyHandlersOfCallbacksForAffiliate(bot);
   applyHandlersOfCallbacksForNetwork(bot);
+  applyHandlersOfCallbacksForSettings(bot);
   applyHandlersOfCallbacksForWallet(bot);
 
 

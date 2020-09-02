@@ -6,27 +6,28 @@ const leopays = require('../../leopays');
 
 const hbsMsgMenuWalletEN = `
 💼 <b>Wallet</b>
-👤 /a_{{account}}
+{{#if accounts}}
+{{#each balances}}
 
-<b>Balance:</b> {{balance}} {{cryptocurrency_code}}
-<b>Equivalent:</b> {{equivalent_balance}} {{currency_code}}
-<b>Available:</b> {{available_balance}} {{cryptocurrency_code}}
-<b>Staked:</b> {{staked_balance}} {{cryptocurrency_code}}
+👤 /a_{{this.account}}
+<b>Balance:</b> {{this.balance}}
+<b>Refund:</b> {{this.refundsLPC}}{{#if this.refundsRequestTime}} by {{refundsRequestTime}}{{/if}}
+<b>Stake:</b> {{this.staked}}
+{{/each}}
+{{else}}
+⚠️ <b>Account not created!</b>
+{{/if}}
 
-🤝 <b>Invited:</b> {{count_invited}} users
-💰 <b>Revenue:</b> {{sum_revenue}} {{cryptocurrency_code}}
+🤝 <b>Invited:</b> {{referralsCount}} users
 `;
-// <b>Примерно:</b> {{this.equivalent}} {{this.currency_symbol}}
-// 💰 <b>Заработано:</b> {{referralsRevenue}} {{cryptocurrencySymbol}}
-// <b>Доступно:</b> {{this.available}} {{this.cryptocurrency_symbol}}
 const hbsMsgMenuWalletRU = `
-💼 <b>Кошелек</b>
+💼 <b>Кошелёк</b>
 {{#if accounts}}
 {{#each balances}}
 
 👤 /a_{{this.account}}
 <b>Баланс:</b> {{this.balance}}
-<b>Refunds:</b> {{this.refundsLPC}}{{#if this.refundsRequestTime}} до {{refundsRequestTime}}{{/if}}
+<b>Возврат:</b> {{this.refundsLPC}}{{#if this.refundsRequestTime}} до {{refundsRequestTime}}{{/if}}
 <b>Застейкано:</b> {{this.staked}}
 {{/each}}
 {{else}}
@@ -92,7 +93,13 @@ const msgMenuWallet = async (ctx) => {
 
 
 const hbsMsgMenuWalletReceiveEN = `
-💼 <b>Wallet</b>
+💼 <b>Receive</b>
+To receive coins, you need to give the sender the name of your LeoPays account.
+
+Uvas has access to the following accounts:
+{{#each accounts}}
+{{this}}
+{{/each}}
 `;
 const hbsMsgMenuWalletReceiveRU = `
 💼 <b>Получить</b>
@@ -102,7 +109,6 @@ const hbsMsgMenuWalletReceiveRU = `
 {{#each accounts}}
 {{this}}
 {{/each}}
-
 `;
 const msgMenuWalletReceive = (ctx) => {
   const { i18n, session } = ctx;

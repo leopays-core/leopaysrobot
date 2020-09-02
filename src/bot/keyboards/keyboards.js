@@ -6,6 +6,8 @@ const { int_to_base58 } = require('base58');
 const urlapi = require('url');
 const aboutKeyboards = require('./about');
 const accountKeyboards = require('./account');
+const networkKeyboards = require('./network');
+const settingsKeyboards = require('./settings');
 const walletKeyboards = require('./wallet');
 const settings = require('../../../settings');
 const { c } = settings;
@@ -62,103 +64,6 @@ const kbIAgree = (ctx) => {
 }
 
 
-const ikbMenuNetwork = (ctx) => {
-  const { i18n } = ctx;
-  const ts = int_to_base58(Math.round(new Date().getTime() / 1000));
-  const kbArray = [];
-
-  kbArray.push([
-    callbackButton(
-      i18n.t('Block Producers'),
-      urlapi.format({ pathname: `${c.networkL3}/prods`, query: { ts, }, }),
-    ),
-  ]);
-
-  return inlineKeyboard(kbArray);
-}
-
-const ikbMenuNetworkProds = (ctx, producersdata = { rows: [], more: false }, selected = []) => {
-  const { i18n } = ctx;
-  const ts = int_to_base58(Math.round(new Date().getTime() / 1000));
-  const kbArray = [];
-  const kbArrayRowSize = 2;
-  let kbArrayRow = [];
-
-  for (let i in producersdata.rows) {
-    const pathname = 'net/prods';
-    const query = {
-      p: producersdata.rows[i].owner,
-      m: producersdata.rows[i].more,
-      ts,
-    };
-    const isActive = stringToBoolean(producersdata.rows[i].is_active);
-    if (isActive) {
-      if (!(kbArrayRow.length < kbArrayRowSize)) {
-        kbArray.push(kbArrayRow);
-        kbArrayRow = [];
-      }
-
-      kbArrayRow.push(
-        callbackButton(
-          producersdata.rows[i].owner,
-          urlapi.format({ pathname, query, }),
-        ),
-      );
-    }
-  }
-  if (kbArrayRow.length > 0)
-    kbArray.push(kbArrayRow);
-
-  kbArray.push([
-    callbackButton(
-      i18n.t('Back'),
-      urlapi.format({ pathname: `${c.networkL3}`, query: { ts, }, }),
-    ),
-  ]);
-
-  return inlineKeyboard(kbArray);
-}
-
-
-
-const ikbMenuProducers = (producersdata = { rows: [], more: false }, selected = []) => {
-  const ts = int_to_base58(Math.round(new Date().getTime() / 1000));
-  const kbArray = [];
-  const kbArrayRowSize = 2;
-  let kbArrayRow = [];
-
-  for (let i in producersdata.rows) {
-    const pathname = '';
-    const query = {
-      p: producersdata.rows[i].owner,
-      m: producersdata.rows[i].more,
-      ts,
-    };
-    const isActive = stringToBoolean(producersdata.rows[i].is_active);
-    if (isActive) {
-      if (!(kbArrayRow.length < kbArrayRowSize)) {
-        kbArray.push(kbArrayRow);
-        kbArrayRow = [];
-      }
-
-      let sel = '';
-      if (selected.includes(producersdata.rows[i].owner))
-        sel = '✅ ';
-      kbArrayRow.push(
-        callbackButton(
-          `${sel}${producersdata.rows[i].owner}`,
-          urlapi.format({ pathname, query, }),
-        )
-      );
-    }
-  }
-  if (kbArrayRow.length > 0)
-    kbArray.push(kbArrayRow);
-
-  return inlineKeyboard(kbArray);
-}
-
-
 const kbMain = (ctx) => {
   const { i18n } = ctx;
   const kbArray = [];
@@ -172,7 +77,7 @@ const kbMain = (ctx) => {
   ]);
   kbArray.push([
     button(i18n.t('About')),
-    //button(i18n.t('Settings')),
+    button(i18n.t('Settings')),
   ]);
 
   return keyboard(kbArray).resize();
@@ -257,8 +162,6 @@ const ikbMenuSelecAccount = (ctx, pathname, accounts) => {
 
 
 module.exports = {
-  ikbMenuNetwork,
-  ikbMenuNetworkProds,
   kbStart,
   kbCancel,
   kbCancelNext,
@@ -270,8 +173,9 @@ module.exports = {
   ikbMenuShortInfo,
   ikbMenuTransaction,
   ikbMenuSelecAccount,
-  ikbMenuProducers,
   ...aboutKeyboards,
   ...accountKeyboards,
+  ...networkKeyboards,
+  ...settingsKeyboards,
   ...walletKeyboards,
 };

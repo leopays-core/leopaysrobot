@@ -1,11 +1,11 @@
 const Handlebars = require('handlebars');
-const { int_to_base58 } = require('base58');
 const settings = require('../../../settings');
 
 
 
 const hbsMsgMenuAboutEN = `
-This telegram bot is a part of <a href="{{company_url}}">{{company_name_com}}</a>.`;
+This telegram bot is a part of <a href="{{company_url}}">{{company_name}}</a>.
+`;
 const hbsMsgMenuAboutRU = `
 Это телеграм бот <a href="{{company_url}}">{{company_name}}</a>.
 `;

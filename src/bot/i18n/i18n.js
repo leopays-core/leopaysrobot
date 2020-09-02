@@ -1,5 +1,5 @@
 const path = require('path');
-const I18n = require('telegraf-i18n');
+const I18n = require('../telegraf-i18n');
 
 
 

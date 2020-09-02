@@ -3,9 +3,11 @@ const TGUser = mongoose.model('TGUser');
 const about = require('./about');
 const account = require('./account');
 const affiliate = require('./affiliate');
+const settings = require('./settings');
 const wallet = require('./wallet');
 const getExtra = require('../../extra');
 const {
+  msgMenuTransaction,
   msgNewReferal,
   msgAgreeTermsOfService,
   msgShortInfo, msgGreeting,
@@ -13,6 +15,7 @@ const {
   msgMenuSelecAccount,
 } = require('../../messages');
 const {
+  ikbMenuTransaction,
   kbIAgree, kbMain,
   ikbMenuShortInfo,
   ikbMenuSelecAccount,
@@ -22,20 +25,45 @@ const {
 
 
 
+async function sendMenuTransaction(ctx, transaction) {
+  const text = msgMenuTransaction(ctx, transaction);
+  const keyboard = ikbMenuTransaction(ctx, transaction);
+  const extra = getExtra({ html: true, keyboard });
+  return ctx.reply(text, extra);
+}
+async function sendMenuTransactionError(ctx, errorObj) {
+  const { i18n } = ctx;
+  let txt = `<b>${i18n.t('LeoPays node returned an error')}</b>\n`;
+  //txt += `<code>${SS(errorObj)}</code>`;
+  let errObj = {};
+  errObj.code = errorObj.json.code;
+  errObj.message = errorObj.json.message;
+  errObj.error = {
+    code: errorObj.json.error.code,
+    message: errorObj.json.error.details[0].message,
+  };
+  txt += `<code>${SS(errObj)}</code>`;
+  const extra = getExtra({ html: true });
+  return ctx.reply(txt, extra);
+}
+
 async function sendMenuNetwork(ctx) {
-  const text = '<b>Network</b>';
+  const { i18n } = ctx;
+  const text = `<b>${i18n.t('Network')}</b>`;
   const keyboard = ikbMenuNetwork(ctx);
   const extra = getExtra({ html: true, keyboard });
   return ctx.reply(text, extra);
 }
 async function editToMenuNetwork(ctx) {
-  const text = '<b>Network</b>';
+  const { i18n } = ctx;
+  const text = `<b>${i18n.t('Network')}</b>`;
   const keyboard = ikbMenuNetwork(ctx);
   const extra = getExtra({ html: true, keyboard });
   return ctx.editMessageText(text, extra);
 }
 async function editToMenuNetworkProds(ctx, producersdata = { rows: [], more: false }, selectes = []) {
-  const text = '<b>Network</b>';
+  const { i18n } = ctx;
+  const text = `<b>${i18n.t('Network')}</b>`;
   const keyboard = ikbMenuNetworkProds(ctx, producersdata, selectes);
   const extra = getExtra({ html: true, keyboard });
   return ctx.editMessageText(text, extra);
@@ -172,6 +200,8 @@ async function editMenuToSelecAccount(ctx, pathname, accounts) {
 
 
 module.exports = {
+  sendMenuTransaction,
+  sendMenuTransactionError,
   sendMenuNetwork,
   editToMenuNetwork,
   editToMenuNetworkProds,
@@ -187,5 +217,6 @@ module.exports = {
   ...about,
   ...account,
   ...affiliate,
+  ...settings,
   ...wallet,
 };
