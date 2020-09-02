@@ -63,7 +63,7 @@ async function editToMenuNetwork(ctx) {
 }
 async function editToMenuNetworkProds(ctx, producersdata = { rows: [], more: false }, selectes = []) {
   const { i18n } = ctx;
-  const text = `<b>${i18n.t('Network')}</b>`;
+  const text = `<b>${i18n.t('Block Producers')}</b>`;
   const keyboard = ikbMenuNetworkProds(ctx, producersdata, selectes);
   const extra = getExtra({ html: true, keyboard });
   return ctx.editMessageText(text, extra);
