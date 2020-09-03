@@ -5,6 +5,7 @@ const account = require('./account');
 const affiliate = require('./affiliate');
 const settings = require('./settings');
 const wallet = require('./wallet');
+const SS = require('../../../lib/smart-stringify');
 const getExtra = require('../../extra');
 const {
   msgMenuTransaction,
@@ -36,11 +37,11 @@ async function sendMenuTransactionError(ctx, errorObj) {
   let txt = `<b>${i18n.t('LeoPays node returned an error')}</b>\n`;
   //txt += `<code>${SS(errorObj)}</code>`;
   let errObj = {};
-  errObj.code = errorObj.json.code;
-  errObj.message = errorObj.json.message;
+  errObj.code = (errorObj.json && errorObj.json.code) ? errorObj.json.code : null;
+  errObj.message = (errorObj.json && errorObj.json.message) ? errorObj.json.message : null
   errObj.error = {
-    code: errorObj.json.error.code,
-    message: errorObj.json.error.details[0].message,
+    code: (errorObj.json && errorObj.json.error && errorObj.json.error.code) ? errorObj.json.error.code : null,
+    message: (errorObj.json && errorObj.json.error && errorObj.json.error.details) ? errorObj.json.error.details[0].message : null,
   };
   txt += `<code>${SS(errObj)}</code>`;
   const extra = getExtra({ html: true });
