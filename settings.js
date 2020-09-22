@@ -21,7 +21,7 @@ const explorer = {
   local: { url: explorerUrl, query: '', },
 };
 
-
+// https://hyperion.docs.eosrio.io/hyperion/
 let hyperionUrl = 'https://hyperion.leopays.dev';
 if (cfg.get('leopays.network') === 'testnet') {
   hyperionUrl = 'https://hyperion.testnet.leopays.dev';
