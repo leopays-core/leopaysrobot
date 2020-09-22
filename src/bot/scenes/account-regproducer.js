@@ -12,7 +12,7 @@ const logger = require('../../logger');
 const log = logger.getLogger('scene:account-regproducer');
 const SS = require('../../lib/smart-stringify');
 const leopays = require('../../leopays');
-const ecc = require('leopaysjs-ecc');
+const ecc = require('@leopays-core/leopaysjs-ecc');
 
 
 

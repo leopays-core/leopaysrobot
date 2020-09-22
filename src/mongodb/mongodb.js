@@ -42,11 +42,12 @@ const connectDb = (label = 'db') => {
 
     mongoose.connect(uri, options)
       .then(
-        () => {
+        (connection) => {
           log.debug(`'${label}'`, 'mongoose.connect() ok');
+          resolve(connection);
         },
         (error) => {
-          log.error(`'${label}'`, 'mongoose.connect() error;', error);
+          log.error(`'${label}'`, 'mongoose.connect() error', error);
           throw new Error(error);
         },
       )
@@ -55,19 +56,17 @@ const connectDb = (label = 'db') => {
         throw new Error(error);
       });
 
-    const db = mongoose.connection;
-    db.on('error', (error) => {
-      log.error(`'${label}'`, "db.on('error'). error:", error);
+    mongoose.connection.on('error', (error) => {
+      log.error(`'${label}'`, "connection.on('error'). error:", error);
       throw new Error(error);
     });
-    db.once('open', () => {
+    mongoose.connection.once('open', () => {
       log.debug(`'${label}'`, 'connection opened.');
     });
-    db.on('connected', () => {
+    mongoose.connection.on('connected', () => {
       log.info(`'${label}'`, 'Succesfully connected to MongoDB Database.');
     });
 
-    return resolve(db);
   });
 };
 

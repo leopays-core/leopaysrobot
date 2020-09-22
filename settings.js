@@ -70,7 +70,8 @@ const newAccount = {
   cpu: '0.8000 LPC',
   cpu_rate: 4 / 5,
 };
-const maxAccountsPerUser = 30;
+const maxAccountsPerUser = 1;
+const newAccountTestnetBounty = `10000.0000 LPC`;
 
 
 module.exports = {
@@ -84,6 +85,6 @@ module.exports = {
   newAccount,
   newAccountDefaultCreator,
   maxAccountsPerUser,
-
+  newAccountTestnetBounty,
 };
 

@@ -27,6 +27,8 @@
     "start:prod": "NODE_ENV=production node ./bin/leopaysrobot"
   },
   "dependencies": {
+    "@leopays-core/leopaysjs": "^0.1.2",
+    "@leopays-core/leopaysjs-ecc": "^0.1.1",
     "@log4js-node/gelf": "^1.0.2",
     "base58": "^2.0.1",
     "bignumber.js": "^9.0.0",
@@ -42,8 +44,6 @@
     "helmet": "^4.1.0",
     "http-errors": "^1.8.0",
     "js-yaml": "^3.14.0",
-    "leopaysjs": "https://github.com/leopays-core/leopaysjs",
-    "leopaysjs-ecc": "https://github.com/leopays-core/leopaysjs-ecc",
     "locale-emoji": "^0.3.0",
     "log4js": "^6.3.0",
     "mongoose": "^5.10.1",

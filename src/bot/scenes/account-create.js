@@ -10,6 +10,7 @@ const {
 const {
   sendMenuAccountCreate, sendMenuTransaction, sendMenuTransactionError,
 } = require('../handlers/lib');
+const cfg = require('../../config');
 const logger = require('../../logger');
 const log = logger.getLogger('scene:account-create');
 const SS = require('../../lib/smart-stringify');
@@ -80,6 +81,23 @@ const scene = new WizardScene('account-create',
                   doc.account_main = newAccountName;
                 await doc.save();
                 session.user = doc.toJSON();
+              }
+
+              if (cfg.get('leopays.network') === 'testnet') {
+                leopays.tokenTransfer({
+                  from: 'leopays', to: newAccountName,
+                  quantity: settings.newAccountTestnetBounty,
+                  memo: 'LeoPays Testnet Gift for new accounts',
+                }).then(async (transaction) => {
+                  sendMenuTransaction(
+                    ctx, transaction,
+                    `<b>LeoPays Testnet Gift for new accounts: ${settings.newAccountTestnetBounty}</b>`
+                  );
+                }).catch((error) => {
+                  log.error(error);
+                  log.error(SS(error));
+                  return sendMenuTransactionError(ctx, error);
+                });
               }
 
             }).catch((error) => {

@@ -1,5 +1,5 @@
-const { Api, JsonRpc, RpcError } = require('leopaysjs');
-const { JsSignatureProvider } = require('leopaysjs/dist/eosjs-jssig');
+const { Api, JsonRpc, RpcError } = require('@leopays-core/leopaysjs');
+const { JsSignatureProvider } = require('@leopays-core/leopaysjs/dist/leopaysjs-jssig');
 const fetch = require('node-fetch');
 const { TextEncoder, TextDecoder } = require('util');
 const cfg = require('../config');

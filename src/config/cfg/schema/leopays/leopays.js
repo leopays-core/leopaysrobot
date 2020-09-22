@@ -5,6 +5,11 @@ const isProd = process.env.NODE_ENV === 'production';
 // Define a schema
 const schema = {
   leopays: {
+    network: {
+      doc: "LeoPays network mode",
+      format: ["testnet", "mainnet"],
+      default: "testnet",
+    },
     keys: {
       doc: "LeoPays private keys",
       format: Array,

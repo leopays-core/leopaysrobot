@@ -26,8 +26,8 @@ const {
 
 
 
-async function sendMenuTransaction(ctx, transaction) {
-  const text = msgMenuTransaction(ctx, transaction);
+async function sendMenuTransaction(ctx, transaction, extraText = '') {
+  const text = extraText + '\n\n' + msgMenuTransaction(ctx, transaction);
   const keyboard = ikbMenuTransaction(ctx, transaction);
   const extra = getExtra({ html: true, keyboard });
   return ctx.reply(text, extra);
