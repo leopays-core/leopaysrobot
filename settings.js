@@ -12,14 +12,22 @@ const node = { protocol: cfg.get('leopays.node.protocol'), host: cfg.get('leopay
 const localNode = { protocol: 'http', host: 'localhost', port: 8888, };
 //const localHyperion = { protocol: 'http', host: 'localhost', port: 8080, };
 
-//const global_query = `?nodeUrl=${node.protocol}%3A%2F%2F${node.host}%3A${node.port}&coreSymbol=LPC&corePrecision=4&systemDomain=lpc&hyperionUrl=${hyperion.protocol}%3A%2F%2F${hyperion.host}%3A${hyperion.port}`;
-const global_query = `?nodeUrl=${node.protocol}%3A%2F%2F${node.host}%3A${node.port}&coreSymbol=LPC&corePrecision=4&systemDomain=lpc`;
-//const local_query = `?nodeUrl=${localNode.protocol}%3A%2F%2F${localNode.host}%3A${localNode.port}&coreSymbol=LPC&corePrecision=4&systemDomain=lpc&hyperionUrl=${localHyperion.protocol}%3A%2F%2F${localHyperion.host}%3A${localHyperion.port}`;
-const local_query = `?nodeUrl=${localNode.protocol}%3A%2F%2F${localNode.host}%3A${localNode.port}&coreSymbol=LPC&corePrecision=4&systemDomain=lpc`;
-
+let explorerUrl = 'https://explorer.leopays.dev';
+if (cfg.get('leopays.network') === 'testnet') {
+  explorerUrl = 'https://explorer.testnet.leopays.dev';
+}
 const explorer = {
-  global: { url: 'https://local.bloks.io', query: global_query, },
-  local: { url: 'https://local.bloks.io', query: local_query, },
+  global: { url: explorerUrl, query: '', },
+  local: { url: explorerUrl, query: '', },
+};
+
+
+let hyperionUrl = 'https://hyperion.leopays.dev';
+if (cfg.get('leopays.network') === 'testnet') {
+  hyperionUrl = 'https://hyperion.testnet.leopays.dev';
+}
+const hyperion = {
+  url: hyperionUrl,
 };
 
 
@@ -75,9 +83,10 @@ const newAccountTestnetBounty = `10000.0000 LPC`;
 
 
 module.exports = {
-  node, //hyperion,
-  localNode, //localHyperion,
+  node,
+  localNode,
   explorer,
+  hyperion,
   c: constants,
   public_name,
   company,
